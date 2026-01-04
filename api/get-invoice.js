@@ -29,6 +29,15 @@ module.exports = async (req, res) => {
     const SELLHUB_API_KEY = process.env.SELLHUB_API_KEY;
     const SELLHUB_STORE_URL = process.env.SELLHUB_STORE_URL || 'https://visiondevelopment.sellhub.cx';
     const cleanStoreUrl = SELLHUB_STORE_URL.replace(/\/$/, '');
+    const storeHost = (() => {
+      try {
+        return new URL(cleanStoreUrl).hostname;
+      } catch {
+        return '';
+      }
+    })();
+    // e.g. visiondevelopment.sellhub.cx -> visiondevelopment
+    const storeSlug = storeHost.split('.').filter(Boolean)[0] || '';
 
     if (!SELLHUB_API_KEY) {
       return res.status(500).json({ error: 'Server configuration error' });
@@ -45,46 +54,82 @@ module.exports = async (req, res) => {
     const apiEndpoint = `${cleanStoreUrl}/api/invoices?createdAtFrom=${encodeURIComponent(fromIso)}&createdAtTo=${encodeURIComponent(toIso)}`;
 
     console.log('=== Sellhub Get Invoices Request ===');
-    console.log('Endpoint:', apiEndpoint);
     console.log('Filter email:', email || '(none)');
     console.log('createdAtFrom:', fromIso);
     console.log('createdAtTo:', toIso);
+    console.log('Derived storeSlug:', storeSlug || '(unknown)');
 
-    const sellhubResponse = await fetch(apiEndpoint, {
-      method: 'GET',
-      headers: {
-        'Authorization': SELLHUB_API_KEY,
-        'Accept': 'application/json'
+    // Some Sellhub endpoints are served under different base URLs.
+    // We try multiple and only accept JSON.
+    const listCandidates = [
+      // store subdomain API (works for checkout create on your store)
+      `${cleanStoreUrl}/api/invoices?createdAtFrom=${encodeURIComponent(fromIso)}&createdAtTo=${encodeURIComponent(toIso)}`,
+      // global store API base (docs often show this)
+      `https://store.sellhub.cx/api/invoices?createdAtFrom=${encodeURIComponent(fromIso)}&createdAtTo=${encodeURIComponent(toIso)}`,
+      // global store API base with store slug hint
+      storeSlug
+        ? `https://store.sellhub.cx/api/invoices?createdAtFrom=${encodeURIComponent(fromIso)}&createdAtTo=${encodeURIComponent(toIso)}&store=${encodeURIComponent(storeSlug)}`
+        : null,
+      // dashboard API base (some resources are exposed here)
+      `https://dash.sellhub.cx/api/sellhub/invoices?createdAtFrom=${encodeURIComponent(fromIso)}&createdAtTo=${encodeURIComponent(toIso)}`
+    ].filter(Boolean);
+
+    const fetchJson = async (url, extraHeaders = {}) => {
+      const r = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': SELLHUB_API_KEY,
+          'Accept': 'application/json',
+          ...extraHeaders
+        }
+      });
+      const ct = r.headers.get('content-type') || '';
+      const text = await r.text();
+      return { r, ct, text };
+    };
+
+    let payload = null;
+    let usedListEndpoint = null;
+    let lastNonJson = null;
+    let lastJsonError = null;
+
+    for (const url of listCandidates) {
+      console.log('Trying invoices list endpoint:', url);
+      const extraHeaders = (url.startsWith('https://store.sellhub.cx') && storeSlug)
+        ? { 'X-Store': storeSlug, 'Store': storeSlug }
+        : {};
+
+      const { r, ct, text } = await fetchJson(url, extraHeaders);
+
+      if (!ct.toLowerCase().includes('application/json')) {
+        lastNonJson = { endpoint: url, status: r.status, statusText: r.statusText, contentType: ct, preview: text.substring(0, 200) };
+        continue;
       }
-    });
 
-    const contentType = sellhubResponse.headers.get('content-type') || '';
-    const raw = await sellhubResponse.text();
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch {
+        lastNonJson = { endpoint: url, status: r.status, statusText: r.statusText, contentType: ct, preview: text.substring(0, 200) };
+        continue;
+      }
 
-    if (!contentType.toLowerCase().includes('application/json')) {
+      if (!r.ok) {
+        lastJsonError = { endpoint: url, status: r.status, statusText: r.statusText, message: json.message || json.error || 'Sellhub error' };
+        continue;
+      }
+
+      payload = json;
+      usedListEndpoint = url;
+      break;
+    }
+
+    if (!payload) {
       return res.status(502).json({
         error: 'Sellhub returned non-JSON response',
-        status: sellhubResponse.status,
-        contentType,
-        preview: raw.substring(0, 200)
-      });
-    }
-
-    let payload;
-    try {
-      payload = JSON.parse(raw);
-    } catch (e) {
-      return res.status(502).json({
-        error: 'Sellhub returned invalid JSON',
-        preview: raw.substring(0, 200)
-      });
-    }
-
-    if (!sellhubResponse.ok) {
-      return res.status(sellhubResponse.status).json({
-        error: 'Sellhub API error',
-        message: payload.message || payload.error || 'Failed to fetch invoices',
-        status: sellhubResponse.status
+        triedEndpoints: listCandidates,
+        lastNonJson,
+        lastJsonError
       });
     }
 
@@ -124,36 +169,58 @@ module.exports = async (req, res) => {
 
     // Fetch full invoice details: GET /invoices/{id}
     // Source: https://docs.sellhub.cx/api/invoices/get-invoice
-    const invoiceEndpoint = `${cleanStoreUrl}/api/invoices/${encodeURIComponent(invoiceId)}`;
-    console.log('Fetching invoice details:', invoiceEndpoint);
+    console.log('Invoices list endpoint used:', usedListEndpoint);
+    console.log('Fetching invoice details for id:', invoiceId);
 
-    const invRes = await fetch(invoiceEndpoint, {
-      method: 'GET',
-      headers: {
-        'Authorization': SELLHUB_API_KEY,
-        'Accept': 'application/json'
+    const detailCandidates = [
+      `${cleanStoreUrl}/api/invoices/${encodeURIComponent(invoiceId)}`,
+      `https://store.sellhub.cx/api/invoices/${encodeURIComponent(invoiceId)}`,
+      storeSlug ? `https://store.sellhub.cx/api/invoices/${encodeURIComponent(invoiceId)}?store=${encodeURIComponent(storeSlug)}` : null,
+      `https://dash.sellhub.cx/api/sellhub/invoices/${encodeURIComponent(invoiceId)}`
+    ].filter(Boolean);
+
+    let invPayload = null;
+    let usedDetailEndpoint = null;
+    let lastDetailNonJson = null;
+    let lastDetailJsonError = null;
+
+    for (const url of detailCandidates) {
+      console.log('Trying invoice detail endpoint:', url);
+      const extraHeaders = (url.startsWith('https://store.sellhub.cx') && storeSlug)
+        ? { 'X-Store': storeSlug, 'Store': storeSlug }
+        : {};
+
+      const { r, ct, text } = await fetchJson(url, extraHeaders);
+
+      if (!ct.toLowerCase().includes('application/json')) {
+        lastDetailNonJson = { endpoint: url, status: r.status, statusText: r.statusText, contentType: ct, preview: text.substring(0, 200) };
+        continue;
       }
-    });
 
-    const invType = invRes.headers.get('content-type') || '';
-    const invRaw = await invRes.text();
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch {
+        lastDetailNonJson = { endpoint: url, status: r.status, statusText: r.statusText, contentType: ct, preview: text.substring(0, 200) };
+        continue;
+      }
 
-    if (!invType.toLowerCase().includes('application/json')) {
-      return res.status(502).json({
-        error: 'Sellhub returned non-JSON invoice response',
-        status: invRes.status,
-        contentType: invType,
-        preview: invRaw.substring(0, 200)
-      });
+      if (!r.ok) {
+        lastDetailJsonError = { endpoint: url, status: r.status, statusText: r.statusText, message: json.message || json.error || 'Sellhub error' };
+        continue;
+      }
+
+      invPayload = json;
+      usedDetailEndpoint = url;
+      break;
     }
 
-    const invPayload = JSON.parse(invRaw);
-
-    if (!invRes.ok) {
-      return res.status(invRes.status).json({
-        error: 'Sellhub API error (invoice)',
-        message: invPayload.message || invPayload.error || 'Failed to fetch invoice',
-        status: invRes.status
+    if (!invPayload) {
+      return res.status(502).json({
+        error: 'Sellhub returned non-JSON invoice response',
+        triedEndpoints: detailCandidates,
+        lastNonJson: lastDetailNonJson,
+        lastJsonError: lastDetailJsonError
       });
     }
 
@@ -162,7 +229,11 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      invoice: invoiceDetails
+      invoice: invoiceDetails,
+      debug: {
+        usedListEndpoint,
+        usedDetailEndpoint
+      }
     });
   } catch (error) {
     console.error('Get Invoice error:', error);
