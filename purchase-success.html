@@ -369,19 +369,44 @@
 
   <script>
     (function() {
-      // Get sessionId from URL query parameters lub localStorage
+      // Preferuj hash, żeby finalny link był /purchase-success#<id>
+      // (hash nie idzie do serwera, ale nam wystarczy do fetch na /api/get-session)
+      const hashId = (window.location.hash || '').replace(/^#/, '').trim();
+
       // Sellhub może przekierować z różnymi parametrami: sessionId, id, session_id
       const params = new URLSearchParams(window.location.search);
-      let sessionId = params.get('sessionId') || params.get('id') || params.get('session_id') || params.get('session');
+      let sessionId =
+        hashId ||
+        params.get('sessionId') ||
+        params.get('id') ||
+        params.get('session_id') ||
+        params.get('session');
       
       // Jeśli nie ma w URL, spróbuj z localStorage (zapisanego przed przekierowaniem)
       if (!sessionId) {
         sessionId = localStorage.getItem('sellhub_sessionId');
         if (sessionId) {
           console.log('Session ID found in localStorage:', sessionId);
-          // Usuń z localStorage po użyciu
-          localStorage.removeItem('sellhub_sessionId');
         }
+      }
+
+      // Normalizuj URL do /purchase-success#<id> (bez query stringa)
+      // - jeśli przyszło w query albo localStorage: przenosimy do hash
+      // - jeśli już jest w hash: zostawiamy
+      if (sessionId && hashId !== sessionId) {
+        const cleanPath = window.location.pathname; // np. /purchase-success
+        const newUrl = `${cleanPath}#${encodeURIComponent(sessionId)}`;
+        try {
+          window.history.replaceState(null, '', newUrl);
+        } catch (e) {
+          // fallback
+          window.location.hash = encodeURIComponent(sessionId);
+        }
+      }
+
+      // Usuń z localStorage dopiero po normalizacji (żeby refresh dalej działał z hashem)
+      if (localStorage.getItem('sellhub_sessionId')) {
+        localStorage.removeItem('sellhub_sessionId');
       }
       
       const loadingDiv = document.getElementById('loading');
