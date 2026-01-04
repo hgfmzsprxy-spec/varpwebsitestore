@@ -1,2 +1,132 @@
-{}
-
+{
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/:path*.html",
+      "destination": "/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/purchase-success",
+      "destination": "/purchase-success.html"
+    },
+    {
+      "source": "/status",
+      "destination": "/status.html"
+    },
+    {
+      "source": "/valorant",
+      "destination": "/valorant.html"
+    },
+    {
+      "source": "/rust",
+      "destination": "/rust.html"
+    },
+    {
+      "source": "/fortnite",
+      "destination": "/fortnite.html"
+    },
+    {
+      "source": "/battlefield-6",
+      "destination": "/battlefield-6.html"
+    },
+    {
+      "source": "/bo6-warzone-external",
+      "destination": "/bo6-warzone-external.html"
+    },
+    {
+      "source": "/delta-force",
+      "destination": "/delta-force.html"
+    },
+    {
+      "source": "/hwid-unban",
+      "destination": "/hwid-unban.html"
+    },
+    {
+      "source": "/forum",
+      "destination": "/forum.html"
+    },
+    {
+      "source": "/guides",
+      "destination": "/guides.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/lost-password",
+      "destination": "/lost-password.html"
+    },
+    {
+      "source": "/register",
+      "destination": "/register.html"
+    },
+    {
+      "source": "/reviews",
+      "destination": "/reviews.html"
+    },
+    {
+      "source": "/support",
+      "destination": "/support.html"
+    },
+    {
+      "source": "/products-topics/:path",
+      "destination": "/products-topics/:path.html"
+    },
+    {
+      "source": "/productpage/fortnite-private",
+      "destination": "/productpage/fortnite-private.html"
+    },
+    {
+      "source": "/productpage/rust",
+      "destination": "/productpage/rust.html"
+    },
+    {
+      "source": "/productpage/valorant",
+      "destination": "/productpage/valorant.html"
+    },
+    {
+      "source": "/productpage/bo7",
+      "destination": "/productpage/bo7.html"
+    },
+    {
+      "source": "/productpage/fivem",
+      "destination": "/productpage/fivem.html"
+    },
+    {
+      "source": "/productpage/permanent-spoofer",
+      "destination": "/productpage/permanent-spoofer.html"
+    },
+    {
+      "source": "/productpage/temporary-spoofer",
+      "destination": "/productpage/temporary-spoofer.html"
+    },
+    {
+      "source": "/section/fortnite",
+      "destination": "/section/fortnite.html"
+    },
+    {
+      "source": "/section/rust",
+      "destination": "/section/rust.html"
+    },
+    {
+      "source": "/section/valorant",
+      "destination": "/section/valorant.html"
+    },
+    {
+      "source": "/section/bo7",
+      "destination": "/section/bo7.html"
+    },
+    {
+      "source": "/section/fivem",
+      "destination": "/section/fivem.html"
+    },
+    {
+      "source": "/section/spoofer",
+      "destination": "/section/spoofer.html"
+    }
+  ]
+}
