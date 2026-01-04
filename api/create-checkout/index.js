@@ -54,10 +54,13 @@ module.exports = async (req, res) => {
 
     // Prepare checkout session payload
     // WYMAGANE: variant musi mieć id, name i price (string!)
+    // WYMAGANE: methodName i customFieldValues (nawet jeśli puste)
     const checkoutPayload = {
       email: email,
       currency: 'USD',
       returnUrl: RETURN_URL,
+      methodName: "", // WYMAGANE przez Sellhub (może być pusty string)
+      customFieldValues: [], // WYMAGANE przez Sellhub (może być pusta tablica)
       cart: {
         items: [
           {
