@@ -2093,6 +2093,13 @@
         }
 
         if (data.success && data.checkoutUrl) {
+          // Zapisz sessionId w localStorage przed przekierowaniem
+          // (na wypadek, gdyby Sellhub nie przekierował z sessionId w URL)
+          if (data.sessionId) {
+            localStorage.setItem('sellhub_sessionId', data.sessionId);
+            console.log('Session ID saved to localStorage:', data.sessionId);
+          }
+          
           // Redirect to Sellhub checkout
           window.location.href = data.checkoutUrl;
         } else {
