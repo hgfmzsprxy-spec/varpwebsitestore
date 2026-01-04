@@ -76,12 +76,12 @@ module.exports = async (req, res) => {
     // Base URL: https://dash.sellhub.cx/api/sellhub/
     // Endpoint: session/create-checkout-session
     // Authorization: <token> (bez "Bearer")
-    // Spróbuj różnych możliwych wariantów endpointu
+    // Spróbuj różnych możliwych wariantów endpointu (najpierw Store URL)
     const possibleEndpoints = [
+      `${cleanStoreUrl}/api/session/create-checkout-session`, // Najpierw Store URL (najbardziej prawdopodobne)
+      `${cleanStoreUrl}/api/sellhub/session/create-checkout-session`,
       'https://dash.sellhub.cx/api/sellhub/session/create-checkout-session',
-      'https://dash.sellhub.cx/api/session/create-checkout-session',
-      `${cleanStoreUrl}/api/session/create-checkout-session`,
-      `${cleanStoreUrl}/api/sellhub/session/create-checkout-session`
+      'https://dash.sellhub.cx/api/session/create-checkout-session'
     ];
     
     let apiEndpoint = possibleEndpoints[0];
