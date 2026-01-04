@@ -118,19 +118,34 @@ module.exports = async (req, res) => {
         
         // Jeśli to nie 404, zapisz błąd i kontynuuj
         if (sellhubResponse.status !== 404) {
-          const errorData = await sellhubResponse.text();
-          lastError = {
-            endpoint: apiEndpoint,
-            status: sellhubResponse.status,
-            statusText: sellhubResponse.statusText,
-            error: errorData.substring(0, 500)
-          };
+          try {
+            const errorData = await sellhubResponse.text();
+            lastError = {
+              endpoint: apiEndpoint,
+              status: sellhubResponse.status,
+              statusText: sellhubResponse.statusText,
+              error: errorData.substring(0, 500)
+            };
+          } catch (e) {
+            lastError = {
+              endpoint: apiEndpoint,
+              status: sellhubResponse.status,
+              statusText: sellhubResponse.statusText,
+              error: 'Could not read error response'
+            };
+          }
           console.log(`Endpoint ${apiEndpoint} returned ${sellhubResponse.status}, trying next...`);
           continue;
         }
         
-        // Jeśli to 404, spróbuj następnego endpointu
+        // Jeśli to 404, spróbuj następnego endpointu (nie odczytuj body dla 404)
         console.log(`Endpoint ${apiEndpoint} returned 404, trying next...`);
+        lastError = {
+          endpoint: apiEndpoint,
+          status: 404,
+          statusText: 'Not Found',
+          error: 'Endpoint not found'
+        };
         
       } catch (error) {
         console.error(`Error with endpoint ${apiEndpoint}:`, error.message);
@@ -144,13 +159,11 @@ module.exports = async (req, res) => {
     
     // Jeśli żaden endpoint nie zadziałał
     if (!sellhubResponse || !sellhubResponse.ok) {
-      const errorData = sellhubResponse ? await sellhubResponse.text() : 'No response';
       const errorStatus = sellhubResponse ? sellhubResponse.status : 0;
       
       console.error('=== All Endpoints Failed ===');
       console.error('Last error:', lastError);
       console.error('Response status:', errorStatus);
-      console.error('Response preview:', errorData.substring(0, 1000));
       
       return res.status(500).json({ 
         error: 'Sellhub API endpoint not found',
