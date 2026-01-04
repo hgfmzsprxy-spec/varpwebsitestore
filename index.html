@@ -491,6 +491,40 @@ body, html {
 	.button_text i {
 	  font-size: 18px;
 	}
+	/* Product Status Styles */
+	.blockData_list li:first-child {
+	  display: inline-block;
+	  padding: 4px 10px;
+	  border-radius: 4px;
+	  font-size: 13px;
+	  font-weight: 600;
+	  text-transform: uppercase;
+	}
+	.blockData_list li:first-child.status-undetected {
+	  color: #26d10f;
+	  background: rgba(38, 209, 15, 0.20);
+	}
+	.blockData_list li:first-child.status-updating {
+	  color: #ce7e00;
+	  background: rgba(206, 126, 0, 0.20);
+	}
+	.blockData_list li:first-child.status-detected {
+	  color: #cc0000;
+	  background: rgba(204, 0, 0, 0.20);
+	}
+	.blockData_list li:first-child.status-testing {
+	  color: #16537e;
+	  background: rgba(22, 83, 126, 0.20);
+	}
+	.blockData_list li:not(.hr):last-child {
+	  display: inline-block;
+	  padding: 4px 10px;
+	  border-radius: 4px;
+	  font-size: 13px;
+	  font-weight: 600;
+	  color: #c2c6d7;
+	  background: rgba(194, 198, 215, 0.20);
+	}
 	.review-avatar {
 	  width: 50px;
 	  height: 50px;
@@ -1018,10 +1052,10 @@ body, html {
                 <div class="blockData_content--top">
                   <h3 class="cNexusGame_block--title">fortnite private  </h3>
                   <ul class="blockData_list">
-                    <li>Products</li>
+                    <li class="status-undetected">Undetected</li>
                     
                     <li class="hr"></li>
-                    <li>From $</li>
+                    <li>From $7.99</li>
                     
                   </ul>
                 </div>
@@ -1039,10 +1073,10 @@ body, html {
                 <div class="blockData_content--top">
                   <h3 class="cNexusGame_block--title">black ops 7  </h3>
                   <ul class="blockData_list">
-                    <li>Products</li>
+                    <li class="status-updating">Updating</li>
                     
                     <li class="hr"></li>
-                    <li>From $</li>
+                    <li>From $7.99</li>
                     
                   </ul>
                 </div>
@@ -1060,10 +1094,10 @@ body, html {
                 <div class="blockData_content--top">
                   <h3 class="cNexusGame_block--title">rust  </h3>
                   <ul class="blockData_list">
-                    <li>Products</li>
+                    <li class="status-updating">Updating</li>
                     
                     <li class="hr"></li>
-                    <li>From $</li>
+                    <li>From $7.99</li>
                     
                   </ul>
                 </div>
@@ -1081,10 +1115,10 @@ body, html {
                 <div class="blockData_content--top">
                   <h3 class="cNexusGame_block--title">hwid spoofer  </h3>
                   <ul class="blockData_list">
-                    <li>Products</li>
+                    <li class="status-undetected">Undetected</li>
                     
                     <li class="hr"></li>
-                    <li>From $</li>
+                    <li>From $14.99</li>
                     
                   </ul>
                 </div>
@@ -1102,10 +1136,10 @@ body, html {
                 <div class="blockData_content--top">
                   <h3 class="cNexusGame_block--title">fivem  </h3>
                   <ul class="blockData_list">
-                    <li>Products</li>
+                    <li class="status-undetected">Undetected</li>
                     
                     <li class="hr"></li>
-                    <li>From $</li>
+                    <li>From $3.99</li>
                     
                   </ul>
                 </div>
