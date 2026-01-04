@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Purchase Successful - Varp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Your purchase was successful">
+  <meta name="theme-color" content="#1a1b24">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1b24 0%, #2d2e3f 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    .success-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 40px;
+      color: white;
+      box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+    }
+    
+    .success-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .success-header p {
+      font-size: 1.1rem;
+      color: #b0b0b0;
+    }
+    
+    .invoice-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .invoice-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .status-badge {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .status-pending {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    
+    .status-paid {
+      background: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+    
+    .status-failed {
+      background: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+    }
+    
+    .order-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .info-label {
+      font-size: 0.85rem;
+      color: #b0b0b0;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .products-section {
+      margin-top: 30px;
+    }
+    
+    .products-section h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .product-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .product-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .product-details {
+      flex: 1;
+    }
+    
+    .product-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .product-variant {
+      font-size: 0.95rem;
+      color: #b0b0b0;
+      margin-bottom: 5px;
+    }
+    
+    .product-quantity {
+      font-size: 0.9rem;
+      color: #888;
+    }
+    
+    .product-price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #2ecc71;
+      text-align: right;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #2ecc71;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .error-message {
+      background: rgba(231, 76, 60, 0.1);
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: #e74c3c;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px 10px;
+      }
+      
+      .success-header h1 {
+        font-size: 2rem;
+      }
+      
+      .invoice-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .order-info {
+        grid-template-columns: 1fr;
+      }
+      
+      .product-item {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .product-price {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="success-header">
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <h1>Purchase Successful!</h1>
+      <p>Thank you for your purchase. Your order details are below.</p>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading order details...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="error-message" style="display: none;">
+      <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+      <p id="errorMessage"></p>
+      <div class="actions" style="margin-top: 20px;">
+        <a href="/" class="btn btn-secondary">Return to Home</a>
+      </div>
+    </div>
+
+    <!-- Invoice Content -->
+    <div id="invoiceContent" style="display: none;">
+      <div class="invoice-card">
+        <div class="invoice-header">
+          <h2>Order Details</h2>
+          <span id="statusBadge" class="status-badge"></span>
+        </div>
+
+        <div class="order-info">
+          <div class="info-item">
+            <span class="info-label">Order ID</span>
+            <span class="info-value" id="orderId">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value" id="orderEmail">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Date</span>
+            <span class="info-value" id="orderDate">-</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Status</span>
+            <span class="info-value" id="orderStatus">-</span>
+          </div>
+        </div>
+
+        <div class="products-section">
+          <h3>Products</h3>
+          <div id="productsList"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="/" class="btn btn-primary">
+          <i class="fas fa-home"></i> Return to Home
+        </a>
+        <a href="/productpage/fortnite-private.html" class="btn btn-secondary">
+          <i class="fas fa-shopping-cart"></i> Continue Shopping
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Get sessionId from URL query parameters
+      // Sellhub może przekierować z różnymi parametrami: sessionId, id, session_id
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get('sessionId') || params.get('id') || params.get('session_id') || params.get('session');
+      
+      const loadingDiv = document.getElementById('loading');
+      const errorDiv = document.getElementById('error');
+      const errorMessage = document.getElementById('errorMessage');
+      const invoiceContent = document.getElementById('invoiceContent');
+      
+      if (!sessionId) {
+        showError('No session ID found in URL. Please check your purchase confirmation email.');
+        return;
+      }
+      
+      // Fetch session data from backend
+      fetch(`/api/get-session?sessionId=${sessionId}`)
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || data.error || 'Failed to load order details');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success && data.session) {
+            displayInvoice(data.session);
+          } else {
+            throw new Error('Invalid response format');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading order:', error);
+          showError(error.message || 'Failed to load order details. Please try again later.');
+        });
+      
+      function showError(message) {
+        loadingDiv.style.display = 'none';
+        errorDiv.style.display = 'block';
+        errorMessage.textContent = message;
+      }
+      
+      function displayInvoice(session) {
+        loadingDiv.style.display = 'none';
+        invoiceContent.style.display = 'block';
+        
+        // Display order info
+        document.getElementById('orderId').textContent = session.id || 'N/A';
+        document.getElementById('orderEmail').textContent = session.email || 'N/A';
+        
+        // Format date
+        if (session.createdAt) {
+          const date = new Date(session.createdAt);
+          document.getElementById('orderDate').textContent = date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+        } else {
+          document.getElementById('orderDate').textContent = 'N/A';
+        }
+        
+        // Display status
+        const status = session.status || 'pending';
+        document.getElementById('orderStatus').textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        
+        // Set status badge
+        const statusBadge = document.getElementById('statusBadge');
+        statusBadge.textContent = status.toUpperCase();
+        statusBadge.className = 'status-badge';
+        if (status === 'paid' || status === 'completed') {
+          statusBadge.classList.add('status-paid');
+        } else if (status === 'failed' || status === 'cancelled') {
+          statusBadge.classList.add('status-failed');
+        } else {
+          statusBadge.classList.add('status-pending');
+        }
+        
+        // Display products
+        const productsList = document.getElementById('productsList');
+        productsList.innerHTML = '';
+        
+        if (session.cartItems && session.cartItems.length > 0) {
+          session.cartItems.forEach(item => {
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product-item';
+            
+            const imageUrl = item.image || '';
+            const productName = item.name || 'Product';
+            const variantName = item.variant?.name || 'Default';
+            const variantPrice = item.variant?.price || '0.00';
+            const quantity = item.quantity || 1;
+            const currency = item.variant?.currency?.toUpperCase() || 'USD';
+            
+            productDiv.innerHTML = `
+              ${imageUrl ? `<img src="${imageUrl}" alt="${productName}" class="product-image" onerror="this.style.display='none'">` : ''}
+              <div class="product-details">
+                <div class="product-name">${productName}</div>
+                <div class="product-variant">${variantName}</div>
+                <div class="product-quantity">Quantity: ${quantity}</div>
+              </div>
+              <div class="product-price">${currency} $${parseFloat(variantPrice).toFixed(2)}</div>
+            `;
+            
+            productsList.appendChild(productDiv);
+          });
+        } else {
+          productsList.innerHTML = '<p style="color: #b0b0b0; text-align: center; padding: 20px;">No products found in this order.</p>';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
+
