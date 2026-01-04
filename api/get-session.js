@@ -42,76 +42,100 @@ module.exports = async (req, res) => {
     }
 
     // Get checkout session from Sellhub API
-    // Endpoint: użyj endpointu specyficznego dla Twojego Store
-    const apiEndpoint = `${cleanStoreUrl}/api/checkout/${sessionId}`;
-    
+    // WAŻNE: Sellhub czasem zwraca HTML (Next.js 404 page) zamiast JSON — tego NIE przepuszczamy do frontu.
+    const possibleEndpoints = [
+      `${cleanStoreUrl}/api/checkout/${sessionId}`,
+      `${cleanStoreUrl}/api/session/${sessionId}`,
+      `https://store.sellhub.cx/api/checkout/${sessionId}`,
+      `https://store.sellhub.cx/api/session/${sessionId}`
+    ];
+
     console.log('=== Sellhub Get Session Request ===');
-    console.log('Endpoint:', apiEndpoint);
     console.log('Session ID:', sessionId);
-    
-    try {
-      const sellhubResponse = await fetch(apiEndpoint, {
-        method: 'GET',
-        headers: {
-          'Authorization': SELLHUB_API_KEY, // Bez "Bearer"
-          'Accept': 'application/json'
+
+    let lastError = null;
+
+    for (const endpoint of possibleEndpoints) {
+      console.log(`Trying endpoint: ${endpoint}`);
+
+      let sellhubResponse;
+      try {
+        sellhubResponse = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Authorization': SELLHUB_API_KEY, // Bez "Bearer"
+            'Accept': 'application/json'
+          }
+        });
+      } catch (error) {
+        console.error(`Network error for endpoint ${endpoint}:`, error.message);
+        lastError = { endpoint, error: error.message };
+        continue;
+      }
+
+      const contentType = sellhubResponse.headers.get('content-type') || '';
+      console.log(`Endpoint ${endpoint} - Status: ${sellhubResponse.status} ${sellhubResponse.statusText} - Content-Type: ${contentType}`);
+
+      // Jeśli to nie jest JSON, bardzo często jest to HTML 404 z aplikacji Sellhub — traktujemy jako nietrafiony endpoint.
+      if (!contentType.toLowerCase().includes('application/json')) {
+        // dla diagnostyki weź tylko krótki fragment, żeby nie spamować logów
+        try {
+          const preview = (await sellhubResponse.text()).substring(0, 200);
+          lastError = { endpoint, status: sellhubResponse.status, statusText: sellhubResponse.statusText, contentType, preview };
+        } catch (e) {
+          lastError = { endpoint, status: sellhubResponse.status, statusText: sellhubResponse.statusText, contentType, preview: 'Could not read body' };
         }
-      });
-      
-      console.log(`Response Status: ${sellhubResponse.status} ${sellhubResponse.statusText}`);
-      
-      // Odczytaj odpowiedź (nawet jeśli błąd) dla debugowania
+        continue;
+      }
+
       const responseText = await sellhubResponse.text();
-      console.log('=== SELLHUB RAW RESPONSE ===');
-      console.log(responseText);
-      
-      // Jeśli odpowiedź nie jest OK, zwróć błąd
+
       if (!sellhubResponse.ok) {
-        let errorMessage;
+        let errorMessage = responseText.substring(0, 500);
         try {
           const errorJson = JSON.parse(responseText);
-          errorMessage = errorJson.message || errorJson.error || responseText;
-        } catch (e) {
-          errorMessage = responseText.substring(0, 500);
-        }
-        
-        console.error('=== Sellhub API Error ===');
-        console.error('Status:', sellhubResponse.status);
-        console.error('Error:', errorMessage);
-        
-        return res.status(sellhubResponse.status).json({ 
-          error: 'Sellhub API error',
-          message: errorMessage,
-          status: sellhubResponse.status
-        });
-      }
-      
-      // Parsuj odpowiedź JSON
-      const sessionData = JSON.parse(responseText);
-      
-      console.log('=== Sellhub API Success ===');
-      console.log('Status:', sellhubResponse.status);
-      console.log('Session Data:', JSON.stringify(sessionData, null, 2));
+          errorMessage = errorJson.message || errorJson.error || errorMessage;
+        } catch (e) {}
 
-      // Sellhub zwraca strukturę: { status: "success", session: { ... } } lub bezpośrednio session
+        lastError = {
+          endpoint,
+          status: sellhubResponse.status,
+          statusText: sellhubResponse.statusText,
+          error: errorMessage
+        };
+        continue;
+      }
+
+      let sessionData;
+      try {
+        sessionData = JSON.parse(responseText);
+      } catch (e) {
+        lastError = { endpoint, status: sellhubResponse.status, statusText: sellhubResponse.statusText, error: 'Invalid JSON returned from Sellhub' };
+        continue;
+      }
+
+      console.log('✓ Sellhub session fetched successfully');
+      console.log('Successful endpoint:', endpoint);
+
       const session = sessionData.session || sessionData;
       const status = sessionData.status || session?.status;
 
-      // Return session data to frontend
       return res.status(200).json({
         success: true,
-        session: session,
-        status: status
-      });
-      
-    } catch (error) {
-      console.error('=== Fetch Error ===');
-      console.error('Error:', error.message);
-      return res.status(500).json({ 
-        error: 'Network error',
-        message: error.message
+        session,
+        status
       });
     }
+
+    console.error('=== All Sellhub Get Session Endpoints Failed ===');
+    console.error('Last error:', lastError);
+
+    return res.status(502).json({
+      error: 'Could not retrieve checkout session from Sellhub',
+      triedEndpoints: possibleEndpoints,
+      lastError,
+      storeUrl: cleanStoreUrl
+    });
 
   } catch (error) {
     console.error('Error getting session:', error);
