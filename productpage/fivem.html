@@ -159,6 +159,115 @@
   visibility: visible !important;
   display: block !important;
 }
+/* Sellhub Checkout Modal Styles */
+.sellhub-checkout-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+.sellhub-checkout-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sellhub-checkout-content {
+  background: rgb(var(--theme-area_background));
+  border-radius: 12px;
+  padding: 2em;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+.sellhub-checkout-close {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: rgb(var(--theme-text_color));
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.sellhub-checkout-close:hover {
+  opacity: 1;
+}
+.sellhub-checkout-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  color: rgb(var(--theme-text_color));
+}
+.sellhub-checkout-subtitle {
+  font-size: 14px;
+  color: rgba(var(--theme-text_color), 0.7);
+  margin-bottom: 1.5em;
+}
+.sellhub-checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.sellhub-checkout-input {
+  width: 100%;
+  padding: 0.875em;
+  border: 1px solid rgba(var(--theme-text_color), 0.2);
+  border-radius: 6px;
+  background: rgb(var(--theme-area_background_dark));
+  color: rgb(var(--theme-text_color));
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+.sellhub-checkout-input:focus {
+  outline: none;
+  border-color: rgb(var(--theme-brand_primary));
+}
+.sellhub-checkout-button {
+  width: 100%;
+  padding: 0.875em;
+  background: rgb(var(--theme-brand_primary));
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-top: 0.5em;
+}
+.sellhub-checkout-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.sellhub-checkout-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.sellhub-checkout-error {
+  color: #ff4444;
+  font-size: 14px;
+  margin-top: 0.5em;
+  display: none;
+}
+.sellhub-checkout-error.active {
+  display: block;
+}
+.sellhub-checkout-loading {
+  display: none;
+  text-align: center;
+  padding: 1em;
+  color: rgba(var(--theme-text_color), 0.7);
+}
+.sellhub-checkout-loading.active {
+  display: block;
+}
 	</style>
 	</head>
 	<body class="ipsApp ipsApp_front ipsJS_none ipsClearfix" data-controller="core.front.core.app" data-message="" data-pageapp="nexus" data-pagelocation="front" data-pagemodule="store" data-pagecontroller="product" data-pageid="9">
@@ -271,15 +380,7 @@
 
 
 
-  
-  	<i class="fa-duotone fa-pager"></i>
-  
 
-                  Forums
-				</a>
-			
-			
-		</li>
 	
 	
 
@@ -529,12 +630,6 @@
 				
 			</li>
 		
-			<li>
-				
-					FiveM Cheat
-				
-			</li>
-		
 	</ul>
 </nav>
                       
@@ -594,7 +689,7 @@
             
               <div class="swiper-slide">
                 <div class="cProductImage">
-                  <img src="images/rustmenu.png.730e71428903c131fcf9820f324153b0.png" alt="FiveM Cheat" loading="lazy" class="cProductJS_image">
+                  <img src="images/fivem1.png" alt="FiveM" loading="lazy" class="cProductJS_image">
                 </div>
               </div>
             
@@ -602,7 +697,7 @@
             
               <div class="swiper-slide">
                 <div class="cProductImage">
-                  <img src="images/image.thumb.png.9fe53813a3eb4d68b1b8d67df04e109d.png.dc549b19edeba225be17214099ddb5e0.png" alt="FiveM Cheat" loading="lazy" class="cProductJS_image">
+                  <img src="images/fivem2.png" alt="FiveM" loading="lazy" class="cProductJS_image">
                 </div>
               </div>
             
@@ -610,7 +705,7 @@
             
               <div class="swiper-slide">
                 <div class="cProductImage">
-                  <img src="images/image.thumb.png.d17290bc51323dc9112581df17d194c3.png.93cb7d89a08b5d797d84733fe4690719.png" alt="FiveM Cheat" loading="lazy" class="cProductJS_image">
+                  <img src="images/fivem3.png" alt="FiveM" loading="lazy" class="cProductJS_image">
                 </div>
               </div>
             
@@ -682,10 +777,9 @@
     </div>
     
     <div class="nexusPackage_desc">
-      <div class="nexusPackage_desc--title">About FiveM Cheat</div>
+      <div class="nexusPackage_desc--title">About FiveM</div>
         
-        
-      <p>Rust Cheat delivers one of the most comprehensive and performance-optimized external Rust tools available. Every feature is fully customizable with sliders, colors, and keybinds — designed for maximum control, stability, and stealth. Built for players searching for Rust Cheats, Rust Hacks, Rust Aimbot, and Rust ESP.
+      <p>An external cheat with many options that you'll definitely not get bored with. Supports all Fivem builds.</p>
 	
 
 	
@@ -694,12 +788,7 @@
 				
 
 				
-					
-						Aimbot System
-					
 
-					
-						Advanced …</p>
     </div>
     <div id="prodcHook-inject" class="ccPackage_raw">
       
@@ -724,7 +813,7 @@
 <span class="cNexusPrice ipsMargin_top">
   
   <span data-role="price">
-    $7.99
+    $3.99
     
   </span>
   
@@ -745,14 +834,14 @@
         <ul class="elCluster_buttons">
             
             <li>
-                <button class="elCluster_button active" data-product-id="35" data-url="storeproduct/35-ruby-rust-cheat-1-day/" data-price="$7.99 ">
+                <button class="elCluster_button active" data-product-id="35" data-url="storeproduct/35-ruby-rust-cheat-1-day/" data-price="$3.99 " data-sellhub-variant-id="5adbe593-0351-4d99-875b-e8f28492a886">
                     <div class="elClusterButton_header">
                       <i class="fa-solid fa-key"></i>
                       <div class="elClusterButton_type">1 Day</div>
                     </div>
                     <div class="elClusterButton_price">
                         <div class="elClusterButton_number">
-                            $7.99
+                            $3.99
                             
                         </div>
                     </div>
@@ -761,14 +850,14 @@
             
               
               <li>
-                  <button class="elCluster_button" data-product-id="36" data-url="storeproduct/36-ruby-rust-cheat-7-days/" data-price="$29.99 ">
+                  <button class="elCluster_button" data-product-id="36" data-url="storeproduct/36-ruby-rust-cheat-7-days/" data-price="$9.99 " data-sellhub-variant-id="70439986-be9e-4e5e-bdfb-147540c0ff94">
                       <div class="elClusterButton_header">
                           <i class="fa-solid fa-key"></i>
-                          <div class="elClusterButton_type">7 Day</div>
+                          <div class="elClusterButton_type">7 Days</div>
                       </div>
                       <div class="elClusterButton_price">
                           <div class="elClusterButton_number">
-                              $29.99
+                              $9.99
                               
                           </div>
                       </div>
@@ -778,14 +867,31 @@
             
               
               <li>
-                  <button class="elCluster_button" data-product-id="37" data-url="storeproduct/37-ruby-rust-cheat-30-days/" data-price="$59.99 ">
+                  <button class="elCluster_button" data-product-id="37" data-url="storeproduct/37-ruby-rust-cheat-30-days/" data-price="$19.99 " data-sellhub-variant-id="ca50d600-2859-4cc4-b886-cb31be31c59c">
                       <div class="elClusterButton_header">
                           <i class="fa-solid fa-key"></i>
-                          <div class="elClusterButton_type">30 Day</div>
+                          <div class="elClusterButton_type">30 Days</div>
                       </div>
                       <div class="elClusterButton_price">
                           <div class="elClusterButton_number">
-                              $59.99
+                              $19.99
+                              
+                          </div>
+                      </div>
+                  </button>
+              </li>
+              
+            
+              
+              <li>
+                  <button class="elCluster_button" data-product-id="38" data-url="storeproduct/38-ruby-rust-cheat-lifetime/" data-price="$49.99 " data-sellhub-variant-id="b05b8347-6559-452b-a659-8aa2bff3a77f">
+                      <div class="elClusterButton_header">
+                          <i class="fa-solid fa-key"></i>
+                          <div class="elClusterButton_type">Lifetime</div>
+                      </div>
+                      <div class="elClusterButton_price">
+                          <div class="elClusterButton_number">
+                              $49.99
                               
                           </div>
                       </div>
@@ -830,123 +936,136 @@
 		<li class="productDesc_block">
 			<div class="productDesc_block--header">
 				<i class="fa-solid fa-crosshairs"></i>
-
 				<div class="productDesc_block--content">
 					<h2 class="productDesc_block--title">
-						Aimbot System
+						Silent Section
 					</h2>
-
 					<p>
-						Advanced aiming assistance with prediction, smoothing, and full targeting control.
+						Advanced silent aim features with customizable settings.
 					</p>
 				</div>
 			</div>
-
 			<ul class="productDesc_block--list">
-				<li>
-					Silent Aim, Hitchance, Max Distance
-				</li>
-				<li>
-					Memory Aim
-				</li>
-				<li>
-					Aimbot Smoothing
-				</li>
-				<li>
-					Prediction System
-				</li>
-				<li>
-					Hitbox Selector
-				</li>
-				<li>
-					Keep Target
-				</li>
-				<li>
-					Show Prediction Lines
-				</li>
-				<li>
-					Show Target Lines
-				</li>
-				<li>
-					Show FOV Circle
-				</li>
-				<li>
-					Target Types: NPC / Wounded / Friendly / Sleeper
-				</li>
+				<li>Enable Silent</li>
+				<li>Silent Distance</li>
+				<li>Show Silent FOV</li>
+				<li>Silent FOV</li>
+				<li>Silent Bone selection (Head, Neck, Chest, LeftFoot, RightFoot, RightHand, LeftHand)</li>
+				<li>Enable Magic</li>
+				<li>Silent Thread Delay</li>
+				<li>Undetectable Silent</li>
+				<li>Perfect Silent</li>
+				<li>Miss Chance</li>
+				<li>Silent Ignore Dead</li>
+				<li>Silent Ignore Invisible</li>
+				<li>Silent Ignore Friends</li>
+				<li>Silent Dynamic FOV</li>
+				<li>Show Silent Bone Line</li>
+				<li>Silent Bone Line Thickness</li>
+				<li>Enable Legit Silent</li>
+				<li>Legit Silent X</li>
+				<li>Legit Silent Y</li>
+				<li>Legit Silent Variance</li>
+				<li>Legit Silent Standalone</li>
+				<li>Legit Silent Override</li>
 			</ul>
 		</li>
 		<li class="productDesc_block">
 			<div class="productDesc_block--header">
-				<i class="fa-solid fa-gun"></i>
+				<i class="fa-solid fa-crosshairs"></i>
 				<div class="productDesc_block--content">
 					<h2 class="productDesc_block--title">
-						Weapons & Projectile Mods
+						Aimbot Section
 					</h2>
-
 					<p>
-						Complete weapon modifications, sound customization, and projectile manipulation.
+						Advanced aiming assistance with customizable settings.
 					</p>
 				</div>
 			</div>
-
 			<ul class="productDesc_block--list">
-				<li>
-					Custom Hit Sounds & Headshot Sounds
-				</li>
-				<li>
-					Hit Sound Volume Control
-				</li>
-				<li>
-					Bullet Tracers
-				</li>
-				<li>
-					Ammo, Reload & Desync Indicators
-				</li>
-				<li>
-					Recoil Control
-				</li>
-				<li>
-					Projectile Spread Modifiers
-				</li>
-				<li>
-					Weapon Spread & Weapon Sway Adjustments
-				</li>
-				<li>
-					Instant Bullet
-				</li>
-				<li>
-					Power Shot
-				</li>
-				<li>
-					Hitbox Override
-				</li>
-				<li>
-					Primitive Weapon Mods: Fast Bow, Instant Eoka, Extended Melee Range
-				</li>
-				<li>
-					No Bolt Cycle
-				</li>
-				<li>
-					No Block on Attack
-				</li>
-				<li>
-					Shoot While In Air or Mounted
-				</li>
-				<li>
-					Animation Unlocks & Deploy Animation Removal
-				</li>
-				<li>
-					Instant Kill
-				</li>
-				<li>
-					Rapid Fire
-				</li>
-				<li>
-					Big Bullets
-				</li>
-				<li>
-					Bullet Penetration
-				</li>
+				<li>Enable Aimbot</li>
+				<li>Aimbot Distance</li>
+				<li>Show Aimbot FOV</li>
+				<li>Aimbot FOV</li>
+				<li>Aimbot Bone selection (Head, Neck, Chest, LeftFoot, RightFoot, RightHand, LeftHand)</li>
+				<li>Aimbot Thread Delay</li>
+				<li>Aimbot Smoothness</li>
+				<li>Aimbot Ignore Dead</li>
+				<li>Aimbot Ignore Invisible</li>
+				<li>Aimbot Ignore Friends</li>
+				<li>Show Aimbot Bone Line</li>
+				<li>Aimbot Bone Line Thickness</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-crosshairs"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Triggerbot Section
+					</h2>
+					<p>
+						Automatic trigger assistance with customizable settings.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Enable Triggerbot</li>
+				<li>Triggerbot Key</li>
+				<li>Triggerbot Distance</li>
+				<li>Show Triggerbot FOV</li>
+				<li>Triggerbot FOV</li>
+				<li>Triggerbot Bone selection (Head, Neck, Chest, LeftFoot, RightFoot, RightHand, LeftHand)</li>
+				<li>Triggerbot Thread Delay</li>
+				<li>Triggerbot Delay</li>
+				<li>Crosshair Tolerance</li>
+				<li>Triggerbot Ignore Dead</li>
+				<li>Triggerbot Ignore Invisible</li>
+				<li>Triggerbot Ignore Friends</li>
+				<li>Triggerbot Ignore NPC</li>
+				<li>Triggerbot Only Visible</li>
+				<li>Show Triggerbot Bone Line</li>
+				<li>Triggerbot Bone Line Thickness</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-map-marker-alt"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Peek Assist Section
+					</h2>
+					<p>
+						Location-based peek assistance with teleportation features.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Peek Assist Location X</li>
+				<li>Peek Assist Location Y</li>
+				<li>Peek Assist Location Z</li>
+				<li>Save Peek Position Key</li>
+				<li>Teleport to Peek Position Key</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-user"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Humanized Aimbot
+					</h2>
+					<p>
+						Human-like aimbot behavior for natural gameplay.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Enable Humanized Aimbot</li>
+				<li>Humanized Smoothness</li>
+				<li>Humanized Velocity</li>
+				<li>Humanized Variance</li>
+				<li>Humanized Randomness</li>
 			</ul>
 		</li>
 		<li class="productDesc_block">
@@ -954,134 +1073,207 @@
 				<i class="fa-solid fa-eye"></i>
 				<div class="productDesc_block--content">
 					<h2 class="productDesc_block--title">
-						Visuals (ESP)
+						ESP Section
 					</h2>
-
 					<p>
-						Fully customizable player ESP with detailed overlays and identifiers.
+						Comprehensive ESP system with multiple visualization options.
 					</p>
 				</div>
 			</div>
-
 			<ul class="productDesc_block--list">
-				<li>
-					Box ESP
-				</li>
-				<li>
-					Skeleton ESP
-				</li>
-				<li>
-					Chams
-				</li>
-				<li>
-					Distance
-				</li>
-				<li>
-					Snaplines
-				</li>
-				<li>
-					Eye Indicators
-				</li>
-				<li>
-					Friendly / Enemy Markers
-				</li>
-				<li>
-					Radar
-				</li>
-				<li>
-					Player List
-				</li>
+				<li>Enable ESP</li>
+				<li>Enable Box ESP</li>
+				<li>Box Size</li>
+				<li>Box Line Type (Dashed / Solid)</li>
+				<li>Box Line Thickness</li>
+				<li>Box Type (Full / Corner)</li>
+				<li>Enable Skeleton ESP</li>
+				<li>Skeleton Type (Basic / Complex)</li>
+				<li>Skeleton Line Type</li>
+				<li>Skeleton Line Thickness</li>
+				<li>Enable Head ESP</li>
+				<li>Head Size</li>
+				<li>Head Line Thickness</li>
+				<li>Enable Name ESP</li>
+				<li>Name Placement</li>
+				<li>Enable ID ESP</li>
+				<li>ID Placement</li>
+				<li>Enable Distance ESP</li>
+				<li>Distance Placement</li>
+				<li>Enable Weapon ESP</li>
+				<li>Weapon Placement</li>
+				<li>Enable Line ESP</li>
+				<li>Line Thickness</li>
+				<li>Line Placement</li>
+				<li>Enable Offscreen ESP</li>
+				<li>Offscreen Movement Type</li>
+				<li>Offscreen Size</li>
+				<li>Offscreen Range</li>
+				<li>Offscreen Center Threshold</li>
+				<li>Enable Health Bar ESP</li>
+				<li>Health Bar Placement</li>
+				<li>Enable Health Text</li>
+				<li>Health Text Placement</li>
+				<li>Enable Armor Bar ESP</li>
+				<li>Armor Bar Placement</li>
+				<li>Enable Armor Text</li>
+				<li>Armor Text Placement</li>
 			</ul>
 		</li>
 		<li class="productDesc_block">
 			<div class="productDesc_block--header">
-				<i class="fa-solid fa-globe"></i>
+				<i class="fa-solid fa-eye"></i>
 				<div class="productDesc_block--content">
 					<h2 class="productDesc_block--title">
-						World ESP
+						Tracer ESP Section
 					</h2>
-
 					<p>
-						Full environmental ESP with customizable distance, materials, and filters.
+						Visual tracer effects for enhanced tracking.
 					</p>
 				</div>
 			</div>
-
 			<ul class="productDesc_block--list">
-				<li>
-					Collectables
-				</li>
-				<li>
-					Crates
-				</li>
-				<li>
-					Vehicles
-				</li>
-				<li>
-					Deployables
-				</li>
-				<li>
-					Ores
-				</li>
-				<li>
-					Animals
-				</li>
-				<li>
-					Custom Material & Distance Settings
-				</li>
-				<li>
-					Full Object Filtering
-				</li>
+				<li>Enable Tracer ESP</li>
+				<li>Tracer Duration</li>
+				<li>Tracer Thickness</li>
 			</ul>
 		</li>
 		<li class="productDesc_block">
 			<div class="productDesc_block--header">
-				<i class="fa-solid fa-person-running"></i>
+				<i class="fa-solid fa-filter"></i>
 				<div class="productDesc_block--content">
 					<h2 class="productDesc_block--title">
-						Movement Enhancements
+						ESP Global Filters
 					</h2>
-
 					<p>
-						Advanced movement manipulation for unmatched mobility.
+						Global filtering options for ESP visibility.
 					</p>
 				</div>
 			</div>
-
 			<ul class="productDesc_block--list">
-				<li>
-					Flyhaxx
-				</li>
-				<li>
-					Spiderman
-				</li>
-				<li>
-					Infinite Jump
-				</li>
-				<li>
-					No Fall Damage
-				</li>
-				<li>
-					Speedhaxx
-				</li>
-				<li>
-					High Jump
-				</li>
-				<li>
-					Walk on Water
-				</li>
-				<li>
-					Omni Sprint
-				</li>
-				<li>
-					Fake Admin Mode
-				</li>
-				<li>
-					Movement Tracers
-				</li>
-				<li>
-					Hand / Weapon Chams
-				</li>
+				<li>ESP Distance</li>
+				<li>ESP Show Local Player</li>
+				<li>ESP Ignore Invisible</li>
+				<li>ESP Ignore Dead</li>
+				<li>ESP Ignore Friends</li>
+				<li>ESP Ignore NPC</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-car"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Vehicle ESP
+					</h2>
+					<p>
+						Vehicle-specific ESP with detailed information.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Enable Vehicle ESP</li>
+				<li>Vehicle ESP Render Distance</li>
+				<li>Vehicle ESP Marker</li>
+				<li>Vehicle ESP Health</li>
+				<li>Vehicle ESP Snapline</li>
+				<li>Vehicle ESP Snapline Placement</li>
+				<li>Vehicle ESP Distance</li>
+				<li>Vehicle ESP Name</li>
+				<li>Vehicle ESP Lock</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-list"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Vehicle List Section
+					</h2>
+					<p>
+						Comprehensive vehicle list with search functionality.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Enable Vehicle List</li>
+				<li>Vehicle List Distance</li>
+				<li>Vehicle List Search</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-users"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Player List Section
+					</h2>
+					<p>
+						Player list with search and filtering options.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Player List Distance</li>
+				<li>Player List Search</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-cog"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Misc Section
+					</h2>
+					<p>
+						Player, weapon, and vehicle options with advanced features.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Enable Player Options</li>
+				<li>Enable Semi Godmode</li>
+				<li>Enable God Mode</li>
+				<li>Set Health</li>
+				<li>Health Amount</li>
+				<li>Set Armor</li>
+				<li>Armor Amount</li>
+				<li>Enable Cam Fov</li>
+				<li>Cam Fov Amount</li>
+				<li>Enable Absorption</li>
+				<li>Absorption Percent</li>
+				<li>Enable Freecam</li>
+				<li>Freecam Speed</li>
+				<li>Freecam Teleport</li>
+				<li>Enable No Collision</li>
+				<li>Enable Weapon Options</li>
+				<li>Enable No Recoil</li>
+				<li>No Recoil Value</li>
+				<li>Enable No Reload</li>
+				<li>Enable No Spread</li>
+				<li>No Spread Value</li>
+				<li>Enable Range Modify</li>
+				<li>Range Modify Value</li>
+				<li>Enable Damage Boost</li>
+				<li>Damage Boost Value</li>
+				<li>Enable Infinite Ammo</li>
+				<li>Enable Safe Damage Boost</li>
+				<li>Safe Damage Boost Value</li>
+				<li>Enable Vehicle Options</li>
+				<li>Enable Vehicle Speed</li>
+				<li>Vehicle Speed Amount</li>
+				<li>Enable Vehicle Fix</li>
+				<li>Enable Vehicle Godmode</li>
+				<li>Enable Engine Fix</li>
+				<li>Enable Petrol Tank Fix</li>
+				<li>Enable Oil Tank Fix</li>
+				<li>Enable Water Tank Fix</li>
+				<li>Enable Never Explode</li>
+				<li>Enable Vehicle Color</li>
+				<li>Enable Primary Color</li>
+				<li>Primary Color R/G/B</li>
+				<li>Enable Secondary Color</li>
+				<li>Secondary Color R/G/B</li>
 			</ul>
 		</li>
 		<li class="productDesc_block">
@@ -1089,37 +1281,55 @@
 				<i class="fa-solid fa-wrench"></i>
 				<div class="productDesc_block--content">
 					<h2 class="productDesc_block--title">
-						Misc
+						Settings Section
 					</h2>
-
 					<p>
-						Custom camera modes, visual controls, and full menu configuration.
+						Interface and display customization options.
 					</p>
 				</div>
 			</div>
-
 			<ul class="productDesc_block--list">
-				<li>
-					FOV Changer
-				</li>
-				<li>
-					Zoom Control
-				</li>
-				<li>
-					Aspect Ratio Adjustments
-				</li>
-				<li>
-					Debug & Interactive Camera
-				</li>
-				<li>
-					Third Person View
-				</li>
-				<li>
-					Full Menu Customization
-				</li>
-				<li>
-					Config Save / Load System
-				</li>
+				<li>Accent GUI Color</li>
+				<li>Interface Scale</li>
+				<li>Using Animations</li>
+				<li>Animation Speed</li>
+				<li>Bypass Screen Capture</li>
+				<li>Spectator List</li>
+				<li>Watermark</li>
+				<li>Notifications</li>
+			</ul>
+		</li>
+		<li class="productDesc_block">
+			<div class="productDesc_block--header">
+				<i class="fa-solid fa-radar"></i>
+				<div class="productDesc_block--content">
+					<h2 class="productDesc_block--title">
+						Radar Section
+					</h2>
+					<p>
+						Advanced radar system with customizable appearance and functionality.
+					</p>
+				</div>
+			</div>
+			<ul class="productDesc_block--list">
+				<li>Enable Radar</li>
+				<li>Radar Range</li>
+				<li>Radar Size</li>
+				<li>Radar Position</li>
+				<li>Radar Show Players</li>
+				<li>Radar Show Vehicles</li>
+				<li>Radar Show Names</li>
+				<li>Radar Show Distance</li>
+				<li>Radar Show Direction</li>
+				<li>Radar Circle Style</li>
+				<li>Radar Show Waves</li>
+				<li>Radar Animate Waves</li>
+				<li>Radar Background Color</li>
+				<li>Radar Border Color</li>
+				<li>Radar Player Color</li>
+				<li>Radar Enemy Color</li>
+				<li>Radar Vehicle Color</li>
+				<li>Radar Friend Color</li>
 			</ul>
 		</li>
 	</ul>
@@ -1533,7 +1743,7 @@
     "sku": 9,
     "offers": {
         "@type": "Offer",
-        "price": "7.99",
+        "price": "3.99",
         "priceCurrency": "USD",
         "seller": {
             "@type": "Organization",
@@ -1802,5 +2012,191 @@
 		
         
 	
+
+<!-- Sellhub Checkout Modal -->
+<div id="sellhubCheckoutModal" class="sellhub-checkout-modal">
+  <div class="sellhub-checkout-content">
+    <button class="sellhub-checkout-close" id="sellhubCheckoutClose">&times;</button>
+    <h3 class="sellhub-checkout-title">Complete Your Purchase</h3>
+    <p class="sellhub-checkout-subtitle">Enter your email address to continue to checkout</p>
+    <form class="sellhub-checkout-form" id="sellhubCheckoutForm">
+      <input 
+        type="email" 
+        id="sellhubCheckoutEmail" 
+        class="sellhub-checkout-input" 
+        placeholder="your.email@example.com" 
+        required
+        autocomplete="email"
+      >
+      <div class="sellhub-checkout-error" id="sellhubCheckoutError"></div>
+      <div class="sellhub-checkout-loading" id="sellhubCheckoutLoading">
+        <p>Creating checkout session...</p>
+      </div>
+      <button type="submit" class="sellhub-checkout-button" id="sellhubCheckoutSubmit">
+        Continue to Checkout
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+    // Sellhub Checkout Integration
+    (function() {
+      const PRODUCT_ID = '6a7f8a61-e9f0-403c-97a6-ed98ed625645';
+      let selectedVariantId = null;
+      let selectedVariantPrice = null;
+      let selectedVariantName = null;
+      let selectedQuantity = 1;
+
+      // Get selected variant when variant button is clicked
+      document.querySelectorAll('.elCluster_button').forEach(function(button) {
+        button.addEventListener('click', function() {
+          selectedVariantId = this.getAttribute('data-sellhub-variant-id');
+          const priceAttr = this.getAttribute('data-price') || '';
+          selectedVariantPrice = priceAttr.replace(/[^0-9.]/g, '');
+          const variantTypeElement = this.querySelector('.elClusterButton_type');
+          selectedVariantName = variantTypeElement ? variantTypeElement.textContent.trim() : 'Default';
+          document.querySelectorAll('.elCluster_button').forEach(function(btn) {
+            btn.classList.remove('active');
+          });
+          this.classList.add('active');
+        });
+      });
+
+    // Set initial variant
+    const initialButton = document.querySelector('.elCluster_button.active');
+    if (initialButton) {
+      selectedVariantId = initialButton.getAttribute('data-sellhub-variant-id');
+      const priceAttr = initialButton.getAttribute('data-price') || '';
+      selectedVariantPrice = priceAttr.replace(/[^0-9.]/g, '');
+      const variantTypeElement = initialButton.querySelector('.elClusterButton_type');
+      selectedVariantName = variantTypeElement ? variantTypeElement.textContent.trim() : 'Default';
+    }
+
+    // Get quantity
+    const quantityInput = document.getElementById('quantity_input_hidden');
+    if (quantityInput) {
+      selectedQuantity = parseInt(quantityInput.value) || 1;
+    }
+
+    // Modal elements
+    const modal = document.getElementById('sellhubCheckoutModal');
+    const closeBtn = document.getElementById('sellhubCheckoutClose');
+    const form = document.getElementById('sellhubCheckoutForm');
+    const emailInput = document.getElementById('sellhubCheckoutEmail');
+    const submitBtn = document.getElementById('sellhubCheckoutSubmit');
+    const errorDiv = document.getElementById('sellhubCheckoutError');
+    const loadingDiv = document.getElementById('sellhubCheckoutLoading');
+
+    // Open modal when Purchase Now is clicked
+    document.getElementById('add_to_cart').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      if (!selectedVariantId || !selectedVariantPrice) {
+        alert('Please select a product variant first');
+        return;
+      }
+
+      if (quantityInput) {
+        selectedQuantity = parseInt(quantityInput.value) || 1;
+      }
+
+      emailInput.value = '';
+      errorDiv.classList.remove('active');
+      errorDiv.textContent = '';
+      loadingDiv.classList.remove('active');
+      submitBtn.disabled = false;
+
+      modal.classList.add('active');
+      emailInput.focus();
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', function() {
+      modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = emailInput.value.trim();
+
+      if (!email) {
+        showError('Please enter your email address');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      loadingDiv.classList.add('active');
+      errorDiv.classList.remove('active');
+
+      try {
+        const response = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            productId: PRODUCT_ID,
+            variantId: selectedVariantId,
+            variantPrice: selectedVariantPrice,
+            variantName: selectedVariantName,
+            quantity: selectedQuantity
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create checkout session');
+        }
+
+        if (data.success && data.checkoutUrl) {
+          if (data.sessionId) {
+            localStorage.setItem('sellhub_sessionId', data.sessionId);
+          }
+          const createdAtMs = data.createdAt ? Date.parse(data.createdAt) : Date.now();
+          localStorage.setItem('sellhub_createdAtMs', String(Number.isFinite(createdAtMs) ? createdAtMs : Date.now()));
+          if (data.email) {
+            localStorage.setItem('sellhub_email', data.email);
+          } else {
+            localStorage.setItem('sellhub_email', email);
+          }
+          if (data.visitorAnalyticsId) {
+            localStorage.setItem('sellhub_visitorAnalyticsId', data.visitorAnalyticsId);
+          }
+          window.location.href = data.checkoutUrl;
+        } else {
+          throw new Error('Invalid response from server');
+        }
+
+      } catch (error) {
+        console.error('Checkout error:', error);
+        showError(error.message || 'An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        loadingDiv.classList.remove('active');
+      }
+    });
+
+    function showError(message) {
+      errorDiv.textContent = message;
+      errorDiv.classList.add('active');
+    }
+  })();
+</script>
 
 </body></html>

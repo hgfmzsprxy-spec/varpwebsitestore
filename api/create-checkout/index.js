@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { email, variantId, variantPrice, variantName, quantity = 1 } = req.body;
+    const { email, variantId, variantPrice, variantName, quantity = 1, productId } = req.body;
 
     // Validate required fields
     if (!email || !variantId || !variantPrice) {
@@ -39,7 +39,8 @@ module.exports = async (req, res) => {
     // Sellhub API configuration
     const SELLHUB_API_KEY = process.env.SELLHUB_API_KEY;
     const SELLHUB_STORE_ID = process.env.SELLHUB_STORE_ID;
-    const SELLHUB_PRODUCT_ID = process.env.SELLHUB_PRODUCT_ID || 'ac3ab96d-c3d5-4ebd-b9a2-d380def5adbb';
+    // Use productId from request if provided, otherwise fall back to env variable
+    const SELLHUB_PRODUCT_ID = productId || process.env.SELLHUB_PRODUCT_ID || 'ac3ab96d-c3d5-4ebd-b9a2-d380def5adbb';
     const SELLHUB_STORE_URL = process.env.SELLHUB_STORE_URL || 'https://visiondevelopment.sellhub.cx';
     // Usuń końcowy slash z Store URL jeśli istnieje
     const cleanStoreUrl = SELLHUB_STORE_URL.replace(/\/$/, '');
@@ -170,7 +171,10 @@ module.exports = async (req, res) => {
       return res.status(200).json({
         success: true,
         checkoutUrl: checkoutUrl,
-        sessionId: sessionId
+        sessionId: sessionId,
+        createdAt: checkoutData.session?.createdAt || new Date().toISOString(),
+        email: checkoutData.session?.email || email,
+        visitorAnalyticsId: checkoutData.session?.visitorAnalyticsId || null
       });
       
     } catch (error) {
