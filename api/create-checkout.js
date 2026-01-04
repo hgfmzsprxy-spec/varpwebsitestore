@@ -55,6 +55,7 @@ module.exports = async (req, res) => {
     // Prepare checkout session payload
     // WYMAGANE: variant musi mieć id, name i price (string!)
     // WYMAGANE: methodName i customFieldValues (nawet jeśli puste)
+    // UWAGA: Sprawdź czy Product ID i Variant ID są poprawne i należą do Twojego Store!
     const checkoutPayload = {
       email: email,
       currency: 'USD',
@@ -64,9 +65,9 @@ module.exports = async (req, res) => {
       cart: {
         items: [
           {
-            id: SELLHUB_PRODUCT_ID,
+            id: SELLHUB_PRODUCT_ID, // Product ID - sprawdź czy jest poprawny!
             variant: {
-              id: variantId,
+              id: variantId, // Variant ID - sprawdź czy jest poprawny i należy do tego Product!
               name: variantName || 'Default',
               price: variantPrice // Musi być string, np. "24.99"
             },
@@ -77,10 +78,21 @@ module.exports = async (req, res) => {
         bundles: []
       }
     };
+    
+    // Loguj Product ID i Variant ID dla debugowania
+    console.log('=== ID Verification ===');
+    console.log('Product ID:', SELLHUB_PRODUCT_ID);
+    console.log('Variant ID:', variantId);
+    console.log('Store ID:', SELLHUB_STORE_ID);
+    console.log('⚠️  Jeśli błąd "Cart is empty", sprawdź czy:');
+    console.log('   1. Product ID jest poprawny i należy do Store ID:', SELLHUB_STORE_ID);
+    console.log('   2. Variant ID jest poprawny i należy do Product ID:', SELLHUB_PRODUCT_ID);
+    console.log('   3. Oba ID są aktywne w panelu Sellhub');
 
     // Create checkout session with Sellhub API
-    // Endpoint: https://store.sellhub.cx/api/checkout (JEDYNY PRAWIDŁOWY)
-    const apiEndpoint = 'https://store.sellhub.cx/api/checkout';
+    // Endpoint: użyj endpointu specyficznego dla Twojego Store (subdomena)
+    // Każdy Store ma swoje produkty zarejestrowane na swojej subdomenie
+    const apiEndpoint = `${cleanStoreUrl}/api/checkout`;
     
     console.log('=== Sellhub API Request ===');
     console.log('Endpoint:', apiEndpoint);
