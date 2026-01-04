@@ -179,7 +179,7 @@
 .sellhub-checkout-content {
   background: rgb(var(--theme-area_background));
   border-radius: 12px;
-  padding: 2em;
+  padding: 1.5em 2em 2em 2em;
   max-width: 450px;
   width: 90%;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -189,35 +189,49 @@
   position: absolute;
   top: 1em;
   right: 1em;
-  background: none;
+  width: auto;
+  height: auto;
+  background: transparent;
   border: none;
+  border-radius: 0;
   font-size: 24px;
   cursor: pointer;
   color: rgb(var(--theme-text_color));
-  opacity: 0.7;
+  opacity: 0.9;
   transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 .sellhub-checkout-close:hover {
   opacity: 1;
+  background: transparent;
 }
 .sellhub-checkout-title {
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 0.5em;
-  color: rgb(var(--theme-text_color));
+  margin-top: 0;
+  margin-bottom: 0.25em;
+  color: #ffffff;
+  text-align: center;
 }
 .sellhub-checkout-subtitle {
   font-size: 14px;
   color: rgba(var(--theme-text_color), 0.7);
+  margin-top: 0;
   margin-bottom: 1.5em;
+  text-align: center;
 }
 .sellhub-checkout-form {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  align-items: center;
+  gap: 1.5em;
 }
 .sellhub-checkout-input {
-  width: 100%;
+  width: 90%;
+  max-width: 90%;
   padding: 0.875em;
   border: 1px solid rgba(var(--theme-text_color), 0.2);
   border-radius: 6px;
@@ -227,28 +241,182 @@
   transition: border-color 0.2s;
 }
 .sellhub-checkout-input:focus {
-  outline: none;
-  border-color: rgb(var(--theme-brand_primary));
+  outline: none !important;
+  border-color: rgba(var(--theme-text_color), 0.2) !important;
+  box-shadow: none !important;
 }
-.sellhub-checkout-button {
+/* Input Group with Animated Label - From Uiverse.io by alexruix */
+.input-group {
+  position: relative;
+  margin-bottom: 0.5em;
+}
+.input {
+  border: solid 1.5px rgba(var(--theme-text_color), 0.3);
+  border-radius: 1rem;
+  background: rgb(var(--theme-area_background_dark));
+  padding: 1rem;
+  font-size: 1rem;
+  color: rgb(var(--theme-text_color));
   width: 100%;
-  padding: 0.875em;
-  background: rgb(var(--theme-brand_primary));
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  transition: border 150ms cubic-bezier(0.4,0,0.2,1);
+}
+.user-label {
+  position: absolute;
+  left: 15px;
+  color: rgba(var(--theme-text_color), 0.6);
+  pointer-events: none;
+  transform: translateY(1rem);
+  transition: 150ms cubic-bezier(0.4,0,0.2,1);
+  background: transparent;
+}
+.input:focus, .input:valid {
+  outline: none;
+  border: 1.5px solid rgb(var(--theme-brand_primary));
+}
+.input:focus ~ .user-label, .input:valid ~ .user-label {
+  transform: translateY(-50%) scale(0.8);
+  background-color: rgb(var(--theme-area_background));
+  padding: 0 .2em;
+  color: rgb(var(--theme-brand_primary));
+}
+/* Checkbox Styles */
+.sellhub-checkout-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
   margin-top: 0.5em;
 }
-.sellhub-checkout-button:hover:not(:disabled) {
-  opacity: 0.9;
+.sellhub-checkout-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: rgb(var(--theme-brand_primary));
 }
-.sellhub-checkout-button:disabled {
-  opacity: 0.6;
+.sellhub-checkout-checkbox label {
+  color: rgba(var(--theme-text_color), 0.8);
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+/* Button - From Uiverse.io by Creatlydev */
+.Btn {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(var(--theme-brand_primary));
+  border: none;
+  color: white;
+  font-weight: 600;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.103);
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  border-radius: 6px;
+  font-size: 16px;
+  margin-top: 0.5em;
+}
+.Btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+.svgIcon {
+  width: 16px;
+  height: 16px;
+}
+.svgIcon path {
+  fill: white;
+}
+.Btn::before {
+  width: calc(100% + 40px);
+  aspect-ratio: 1/1;
+  position: absolute;
+  content: "";
+  background-color: white;
+  border-radius: 50%;
+  left: -20px;
+  top: 50%;
+  transform: translate(-150%, -50%);
+  transition-duration: .5s;
+  mix-blend-mode: difference;
+}
+.Btn:hover:not(:disabled)::before {
+  transform: translate(0, -50%);
+}
+.Btn:active:not(:disabled) {
+  transform: translateY(4px);
+  transition-duration: .3s;
+}
+/* Continue to Checkout Button - From Uiverse.io by Creatlydev */
+.Btn.continue-checkout-btn {
+  width: 90%;
+  max-width: 90%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2E3241;
+  border: none;
+  color: white !important;
+  font-weight: 600;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.103);
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  text-transform: none;
+  letter-spacing: normal;
+  isolation: isolate;
+}
+
+.Btn.continue-checkout-btn *,
+.Btn.continue-checkout-btn span {
+  position: relative;
+  z-index: 2;
+  color: white !important;
+  mix-blend-mode: normal;
+}
+
+.Btn.continue-checkout-btn {
+  color: white !important;
+  mix-blend-mode: normal;
+}
+
+.Btn.continue-checkout-btn .svgIcon {
+  width: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.Btn.continue-checkout-btn .svgIcon path {
+  fill: white !important;
+}
+
+.Btn.continue-checkout-btn::before {
+  width: calc(100% + 40px);
+  aspect-ratio: 1/1;
+  position: absolute;
+  content: "";
+  background-color: #4088F0;
+  border-radius: 50%;
+  left: -20px;
+  top: 50%;
+  transform: translate(-150%, -50%);
+  transition-duration: .5s;
+  mix-blend-mode: difference;
+  z-index: 1;
+}
+
+.Btn.continue-checkout-btn:hover:not(:disabled)::before {
+  transform: translate(0, -50%);
+}
+
+.Btn.continue-checkout-btn:active {
+  transform: none !important;
 }
 .sellhub-checkout-error {
   color: #ff4444;
@@ -877,7 +1045,7 @@
             <li class="ipsFieldRow">
                 <div class="ipsFieldRow_content">
                     
-                    <button id="add_to_cart" type="submit" class="ipsButton ipsButton_primary" tabindex="2" accesskey="s" role="button">Purchase Now</button>
+                    <button id="add_to_cart" type="button" class="ipsButton ipsButton_primary" tabindex="2" accesskey="s" role="button">Purchase Now</button>
                     
                 </div>
             </li>
@@ -1671,8 +1839,9 @@
       <div class="sellhub-checkout-loading" id="sellhubCheckoutLoading">
         <p>Creating checkout session...</p>
       </div>
-      <button type="submit" class="sellhub-checkout-button" id="sellhubCheckoutSubmit">
-        Continue to Checkout
+      <button type="submit" class="Btn continue-checkout-btn" id="sellhubCheckoutSubmit">
+        <span>Continue to Checkout</span>
+        <svg viewBox="0 0 576 512" class="svgIcon"><path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path></svg>
       </button>
     </form>
   </div>
@@ -1722,7 +1891,8 @@
     const submitBtn = document.getElementById('sellhubCheckoutSubmit');
     const errorDiv = document.getElementById('sellhubCheckoutError');
     const loadingDiv = document.getElementById('sellhubCheckoutLoading');
-
+    
+    // Open modal when Purchase Now is clicked
     document.getElementById('add_to_cart').addEventListener('click', function(e) {
       e.preventDefault();
       
@@ -1755,11 +1925,12 @@
       }
     });
 
-    form.addEventListener('submit', async function(e) {
+    // Handle button press animation and form submission
+    submitBtn.addEventListener('mousedown', function(e) {
       e.preventDefault();
-
+      if (submitBtn.disabled) return;
+      
       const email = emailInput.value.trim();
-
       if (!email) {
         showError('Please enter your email address');
         return;
@@ -1771,12 +1942,16 @@
         return;
       }
 
+      submitBtn.classList.add('pressing');
       submitBtn.disabled = true;
-      loadingDiv.classList.add('active');
-      errorDiv.classList.remove('active');
+      
+      // Wait for animation to complete, then submit
+      setTimeout(async () => {
+        loadingDiv.classList.add('active');
+        errorDiv.classList.remove('active');
 
-      try {
-        const response = await fetch('/api/create-checkout', {
+        try {
+          const response = await fetch('/api/create-checkout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1816,12 +1991,14 @@
           throw new Error('Invalid response from server');
         }
 
-      } catch (error) {
-        console.error('Checkout error:', error);
-        showError(error.message || 'An error occurred. Please try again.');
-        submitBtn.disabled = false;
-        loadingDiv.classList.remove('active');
-      }
+        } catch (error) {
+          console.error('Checkout error:', error);
+          showError(error.message || 'An error occurred. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('pressing');
+          loadingDiv.classList.remove('active');
+        }
+      }, 1000);
     });
 
     function showError(message) {

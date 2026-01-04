@@ -1,0 +1,83 @@
+/* Override input focus border color */
+.sellhub-checkout-input:focus {
+  outline: none !important;
+  border-color: rgba(var(--theme-text_color), 0.2) !important;
+  box-shadow: none !important;
+}
+
+/* Center input position */
+.sellhub-checkout-form {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.sellhub-checkout-input {
+  max-width: 90% !important;
+  width: 90% !important;
+}
+
+.Btn {
+  max-width: 90% !important;
+  width: 90% !important;
+  background: #2E3241 !important;
+}
+
+.Btn.continue-checkout-btn {
+  width: 90% !important;
+  max-width: 90% !important;
+  background-color: #2E3241 !important;
+  color: white !important;
+  mix-blend-mode: normal !important;
+}
+
+.Btn.continue-checkout-btn *,
+.Btn.continue-checkout-btn span {
+  color: white !important;
+  mix-blend-mode: normal !important;
+}
+
+.sellhub-checkout-subtitle {
+  margin-top: 0 !important;
+  margin-bottom: 1.5em !important;
+}
+
+.sellhub-checkout-title {
+  margin-top: 0 !important;
+  margin-bottom: 0.25em !important;
+}
+
+/* Remove hover effect from button */
+.Btn:hover:not(:disabled)::before {
+  transform: translate(-150%, -50%) !important;
+}
+
+/* Enable hover effect for Continue to Checkout button */
+.Btn.continue-checkout-btn:hover:not(:disabled)::before {
+  transform: translate(0, -50%) !important;
+}
+
+/* Disable click effect for Continue to Checkout button */
+.Btn.continue-checkout-btn:active {
+  transform: none !important;
+}
+
+.Btn.continue-checkout-btn.pressing {
+  transform: none !important;
+  background-color: #2E3241 !important;
+}
+
+.Btn.continue-checkout-btn.pressing::before {
+  display: block !important;
+}
+
+/* Press effect - animate on click - change button background only */
+.Btn.pressing {
+  background: rgb(var(--theme-brand_primary)) !important;
+  transition: background 1s ease !important;
+}
+
+.Btn.pressing::before {
+  display: none !important;
+}
+
