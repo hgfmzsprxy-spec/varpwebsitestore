@@ -41,8 +41,6 @@ module.exports = async (req, res) => {
     const SELLHUB_STORE_ID = process.env.SELLHUB_STORE_ID;
     const SELLHUB_PRODUCT_ID = process.env.SELLHUB_PRODUCT_ID || 'ac3ab96d-c3d5-4ebd-b9a2-d380def5adbb';
     const SELLHUB_STORE_URL = process.env.SELLHUB_STORE_URL || 'https://visiondevelopment.sellhub.cx';
-    // Sellhub API base URL - może być inny niż Store URL
-    const SELLHUB_API_BASE = process.env.SELLHUB_API_BASE || SELLHUB_STORE_URL;
     const RETURN_URL = process.env.RETURN_URL || `${req.headers.origin || 'https://shxdowcheats.net'}/purchase-success`;
 
     if (!SELLHUB_API_KEY || !SELLHUB_STORE_ID || !SELLHUB_PRODUCT_ID) {
@@ -72,24 +70,12 @@ module.exports = async (req, res) => {
     };
 
     // Create checkout session with Sellhub API
-    // Spróbuj różnych możliwych endpointów
-    const possibleEndpoints = [
-      `${SELLHUB_API_BASE}/api/session/create-checkout-session`,
-      `${SELLHUB_API_BASE}/api/checkout/session`,
-      `https://api.sellhub.cx/api/session/create-checkout-session`,
-      `https://api.sellhub.cx/checkout/session`
-    ];
-    
-    console.log('Trying Sellhub endpoint:', possibleEndpoints[0]);
-    console.log('Payload:', JSON.stringify(checkoutPayload, null, 2));
-    
-    const sellhubResponse = await fetch(possibleEndpoints[0], {
+    const sellhubResponse = await fetch(`${SELLHUB_STORE_URL}/api/session/create-checkout-session`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${SELLHUB_API_KEY}`,
-        'X-Store-ID': SELLHUB_STORE_ID,
-        'Accept': 'application/json'
+        'X-Store-ID': SELLHUB_STORE_ID
       },
       body: JSON.stringify(checkoutPayload)
     });

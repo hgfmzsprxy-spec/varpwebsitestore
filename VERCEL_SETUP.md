@@ -50,11 +50,17 @@ W panelu Vercel (Settings → Environment Variables) dodaj następujące zmienne
 ```
 /
 ├── api/
-│   └── create-checkout.js    # Vercel Serverless Function
+│   ├── create-checkout.js          # Vercel Serverless Function (alternatywna struktura)
+│   └── create-checkout/
+│       └── index.js                # Vercel Serverless Function (preferowana struktura)
 ├── productpage/
-│   └── fortnite-private.html # Strona produktu z integracją
+│   └── fortnite-private.html       # Strona produktu z integracją
+├── vercel.json                      # Konfiguracja Vercel
+├── package.json                     # Konfiguracja Node.js
 └── ...
 ```
+
+**Uwaga:** Vercel rozpoznaje obie struktury, ale struktura folderowa (`api/create-checkout/index.js`) jest preferowana. Jeśli używasz struktury folderowej, możesz usunąć `api/create-checkout.js`.
 
 ## Mapowanie wariantów produktu
 
@@ -76,15 +82,25 @@ Po wdrożeniu na Vercel:
 
 ## Troubleshooting
 
+### Błąd 404 (Not Found) dla `/api/create-checkout`
+- **Rozwiązanie 1:** Upewnij się, że plik znajduje się w folderze `api/` w root projektu
+- **Rozwiązanie 2:** Sprawdź czy używasz struktury folderowej (`api/create-checkout/index.js`)
+- **Rozwiązanie 3:** Sprawdź logi w Vercel Dashboard → Functions → `create-checkout`
+- **Rozwiązanie 4:** Upewnij się, że `vercel.json` i `package.json` są w root projektu
+- **Rozwiązanie 5:** Po zmianach w strukturze, zrób nowy deployment na Vercel
+
 ### Błąd CORS
 - Upewnij się, że endpoint `/api/create-checkout` jest dostępny
 - Sprawdź czy funkcja jest poprawnie wdrożona na Vercel
+- Sprawdź czy nagłówki CORS są ustawione w funkcji
 
 ### Błąd autoryzacji
-- Sprawdź czy wszystkie zmienne środowiskowe są poprawnie ustawione
+- Sprawdź czy wszystkie zmienne środowiskowe są poprawnie ustawione w Vercel
 - Upewnij się, że API Key jest kompletny i poprawny
+- Sprawdź czy zmienne środowiskowe są dostępne dla wszystkich środowisk (Production, Preview, Development)
 
 ### Błąd tworzenia checkout
-- Sprawdź logi w Vercel Dashboard → Functions
+- Sprawdź logi w Vercel Dashboard → Functions → `create-checkout` → Logs
 - Upewnij się, że Variant ID jest poprawny dla wybranego wariantu
+- Sprawdź czy Sellhub API zwraca błędy (sprawdź logi funkcji)
 
