@@ -18,13 +18,13 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { email, variantId, quantity = 1 } = req.body;
+    const { email, variantId, variantPrice, variantName, quantity = 1 } = req.body;
 
     // Validate required fields
-    if (!email || !variantId) {
+    if (!email || !variantId || !variantPrice) {
       return res.status(400).json({ 
         error: 'Missing required fields',
-        details: 'Email and variantId are required'
+        details: 'Email, variantId, and variantPrice are required'
       });
     }
 
@@ -53,6 +53,7 @@ module.exports = async (req, res) => {
     }
 
     // Prepare checkout session payload
+    // WYMAGANE: variant musi mieć id, name i price (string!)
     const checkoutPayload = {
       email: email,
       currency: 'USD',
@@ -62,9 +63,12 @@ module.exports = async (req, res) => {
           {
             id: SELLHUB_PRODUCT_ID,
             variant: {
-              id: variantId
+              id: variantId,
+              name: variantName || 'Default',
+              price: variantPrice // Musi być string, np. "24.99"
             },
-            quantity: parseInt(quantity) || 1
+            quantity: parseInt(quantity) || 1,
+            addons: []
           }
         ],
         bundles: []
@@ -72,138 +76,79 @@ module.exports = async (req, res) => {
     };
 
     // Create checkout session with Sellhub API
-    // Zgodnie z dokumentacją Sellhub: https://docs.sellhub.cx/api/session/create-checkout-session
-    // Base URL: https://dash.sellhub.cx/api/sellhub/
-    // Endpoint: session/create-checkout-session
-    // Authorization: <token> (bez "Bearer")
-    // Endpoint potwierdzony przez użytkownika
-    // Główny endpoint: https://store.sellhub.cx/api/checkout
-    const possibleEndpoints = [
-      'https://store.sellhub.cx/api/checkout', // Potwierdzony endpoint
-      // Fallback warianty (na wypadek, gdyby główny nie zadziałał)
-      `${cleanStoreUrl}/api/checkout`,
-      'https://dash.sellhub.cx/api/sellhub/checkout',
-      `${cleanStoreUrl}/api/session/create-checkout-session`,
-      `${cleanStoreUrl}/api/${SELLHUB_STORE_ID}/session/create-checkout-session`
-    ];
-    
-    let apiEndpoint = possibleEndpoints[0];
+    // Endpoint: https://store.sellhub.cx/api/checkout (JEDYNY PRAWIDŁOWY)
+    const apiEndpoint = 'https://store.sellhub.cx/api/checkout';
     
     console.log('=== Sellhub API Request ===');
+    console.log('Endpoint:', apiEndpoint);
     console.log('Store ID:', SELLHUB_STORE_ID);
     console.log('Product ID:', SELLHUB_PRODUCT_ID);
     console.log('Variant ID:', variantId);
+    console.log('Variant Price:', variantPrice);
+    console.log('Variant Name:', variantName);
     console.log('Payload:', JSON.stringify(checkoutPayload, null, 2));
     
-    let sellhubResponse = null;
-    let lastError = null;
-    let successfulEndpoint = null;
-    
-    // Spróbuj każdego endpointu po kolei
-    for (const endpoint of possibleEndpoints) {
-      console.log(`Trying endpoint: ${endpoint}`);
+    try {
+      const sellhubResponse = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': SELLHUB_API_KEY, // Bez "Bearer"
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(checkoutPayload)
+      });
       
-      try {
-        sellhubResponse = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': SELLHUB_API_KEY, // Zgodnie z dokumentacją: bez "Bearer"
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify(checkoutPayload)
+      console.log(`Response Status: ${sellhubResponse.status} ${sellhubResponse.statusText}`);
+      
+      // Odczytaj odpowiedź (nawet jeśli błąd) dla debugowania
+      const responseText = await sellhubResponse.text();
+      console.log('=== SELLHUB RAW RESPONSE ===');
+      console.log(responseText);
+      
+      // Jeśli odpowiedź nie jest OK, zwróć błąd
+      if (!sellhubResponse.ok) {
+        let errorMessage;
+        try {
+          const errorJson = JSON.parse(responseText);
+          errorMessage = errorJson.message || errorJson.error || responseText;
+        } catch (e) {
+          errorMessage = responseText.substring(0, 500);
+        }
+        
+        console.error('=== Sellhub API Error ===');
+        console.error('Status:', sellhubResponse.status);
+        console.error('Error:', errorMessage);
+        
+        return res.status(sellhubResponse.status).json({ 
+          error: 'Sellhub API error',
+          message: errorMessage,
+          status: sellhubResponse.status
         });
-        
-        console.log(`Endpoint ${endpoint} - Status: ${sellhubResponse.status} ${sellhubResponse.statusText}`);
-        
-        // Jeśli odpowiedź jest OK, użyj tego endpointu
-        if (sellhubResponse.ok) {
-          successfulEndpoint = endpoint;
-          console.log(`✓ Success with endpoint: ${endpoint}`);
-          break;
-        }
-        
-        // Jeśli to nie 404, zapisz błąd i kontynuuj
-        if (sellhubResponse.status !== 404) {
-          try {
-            const errorData = await sellhubResponse.text();
-            let errorMessage;
-            
-            try {
-              const errorJson = JSON.parse(errorData);
-              errorMessage = errorJson.message || errorJson.error || errorData;
-            } catch (e) {
-              errorMessage = errorData.substring(0, 500);
-            }
-            
-            lastError = {
-              endpoint: endpoint,
-              status: sellhubResponse.status,
-              statusText: sellhubResponse.statusText,
-              error: errorMessage
-            };
-          } catch (e) {
-            lastError = {
-              endpoint: endpoint,
-              status: sellhubResponse.status,
-              statusText: sellhubResponse.statusText,
-              error: 'Could not read error response'
-            };
-          }
-          console.log(`Endpoint ${endpoint} returned ${sellhubResponse.status}, trying next...`);
-          continue;
-        }
-        
-        // Jeśli to 404, spróbuj następnego endpointu
-        console.log(`Endpoint ${endpoint} returned 404, trying next...`);
-        lastError = {
-          endpoint: endpoint,
-          status: 404,
-          statusText: 'Not Found',
-          error: 'Endpoint not found'
-        };
-        
-      } catch (error) {
-        console.error(`Error with endpoint ${endpoint}:`, error.message);
-        lastError = {
-          endpoint: endpoint,
-          error: error.message
-        };
-        continue;
       }
-    }
-    
-    // Jeśli żaden endpoint nie zadziałał
-    if (!sellhubResponse || !sellhubResponse.ok) {
-      const errorStatus = sellhubResponse ? sellhubResponse.status : 0;
       
-      console.error('=== All Endpoints Failed ===');
-      console.error('Last error:', lastError);
-      console.error('Response status:', errorStatus);
+      // Parsuj odpowiedź JSON
+      const checkoutData = JSON.parse(responseText);
       
+      console.log('=== Sellhub API Success ===');
+      console.log('Status:', sellhubResponse.status);
+      console.log('Checkout Data:', JSON.stringify(checkoutData, null, 2));
+
+      // Return checkout URL to frontend
+      return res.status(200).json({
+        success: true,
+        checkoutUrl: checkoutData.url || checkoutData.checkoutUrl,
+        sessionId: checkoutData.id || checkoutData.sessionId
+      });
+      
+    } catch (error) {
+      console.error('=== Fetch Error ===');
+      console.error('Error:', error.message);
       return res.status(500).json({ 
-        error: 'Sellhub API endpoint not found',
-        message: 'None of the attempted endpoints worked. Please verify your Sellhub configuration.',
-        triedEndpoints: possibleEndpoints,
-        lastError: lastError,
-        storeUrl: cleanStoreUrl,
-        storeId: SELLHUB_STORE_ID,
-        suggestion: 'Please check your Sellhub dashboard for the correct API endpoint.'
+        error: 'Network error',
+        message: error.message
       });
     }
-    
-    console.log('=== Sellhub API Success ===');
-    console.log('Successful endpoint:', successfulEndpoint);
-    console.log('Status:', sellhubResponse.status);
-
-    const checkoutData = await sellhubResponse.json();
-
-    // Return checkout URL to frontend
-    return res.status(200).json({
-      success: true,
-      checkoutUrl: checkoutData.url || checkoutData.checkoutUrl,
-      sessionId: checkoutData.id || checkoutData.sessionId
-    });
 
   } catch (error) {
     console.error('Error creating checkout:', error);

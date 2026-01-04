@@ -1959,27 +1959,39 @@
 </div>
 
 <script>
-  // Sellhub Checkout Integration
-  (function() {
-    let selectedVariantId = null;
-    let selectedQuantity = 1;
+    // Sellhub Checkout Integration
+    (function() {
+      let selectedVariantId = null;
+      let selectedVariantPrice = null;
+      let selectedVariantName = null;
+      let selectedQuantity = 1;
 
-    // Get selected variant when variant button is clicked
-    document.querySelectorAll('.elCluster_button').forEach(function(button) {
-      button.addEventListener('click', function() {
-        selectedVariantId = this.getAttribute('data-sellhub-variant-id');
-        // Update active state
-        document.querySelectorAll('.elCluster_button').forEach(function(btn) {
-          btn.classList.remove('active');
+      // Get selected variant when variant button is clicked
+      document.querySelectorAll('.elCluster_button').forEach(function(button) {
+        button.addEventListener('click', function() {
+          selectedVariantId = this.getAttribute('data-sellhub-variant-id');
+          // Pobierz cenę z data-price (format: "$7.99 " -> "7.99")
+          const priceAttr = this.getAttribute('data-price') || '';
+          selectedVariantPrice = priceAttr.replace(/[^0-9.]/g, ''); // Usuń $ i spacje
+          // Pobierz nazwę wariantu z tekstu przycisku
+          const variantTypeElement = this.querySelector('.elClusterButton_type');
+          selectedVariantName = variantTypeElement ? variantTypeElement.textContent.trim() : 'Default';
+          // Update active state
+          document.querySelectorAll('.elCluster_button').forEach(function(btn) {
+            btn.classList.remove('active');
+          });
+          this.classList.add('active');
         });
-        this.classList.add('active');
       });
-    });
 
     // Set initial variant (1 Day is active by default)
     const initialButton = document.querySelector('.elCluster_button.active');
     if (initialButton) {
       selectedVariantId = initialButton.getAttribute('data-sellhub-variant-id');
+      const priceAttr = initialButton.getAttribute('data-price') || '';
+      selectedVariantPrice = priceAttr.replace(/[^0-9.]/g, '');
+      const variantTypeElement = initialButton.querySelector('.elClusterButton_type');
+      selectedVariantName = variantTypeElement ? variantTypeElement.textContent.trim() : 'Default';
     }
 
     // Get quantity
@@ -2001,7 +2013,7 @@
     document.getElementById('add_to_cart').addEventListener('click', function(e) {
       e.preventDefault();
       
-      if (!selectedVariantId) {
+      if (!selectedVariantId || !selectedVariantPrice) {
         alert('Please select a product variant first');
         return;
       }
@@ -2068,6 +2080,8 @@
           body: JSON.stringify({
             email: email,
             variantId: selectedVariantId,
+            variantPrice: selectedVariantPrice,
+            variantName: selectedVariantName,
             quantity: selectedQuantity
           })
         });
