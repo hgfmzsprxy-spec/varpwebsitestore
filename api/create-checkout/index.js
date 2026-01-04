@@ -149,11 +149,28 @@ module.exports = async (req, res) => {
       console.log('Status:', sellhubResponse.status);
       console.log('Checkout Data:', JSON.stringify(checkoutData, null, 2));
 
+      // Sellhub zwraca strukturę: { status: "success", session: { id: "..." } }
+      // Musimy zbudować checkout URL z session.id
+      const sessionId = checkoutData.session?.id || checkoutData.id;
+      
+      if (!sessionId) {
+        console.error('No session ID in response:', checkoutData);
+        return res.status(500).json({ 
+          error: 'Invalid response from Sellhub',
+          message: 'Session ID not found in response'
+        });
+      }
+      
+      // Zbuduj checkout URL na podstawie Store URL i session ID
+      const checkoutUrl = `${cleanStoreUrl}/checkout/${sessionId}/`;
+      
+      console.log('Generated checkout URL:', checkoutUrl);
+
       // Return checkout URL to frontend
       return res.status(200).json({
         success: true,
-        checkoutUrl: checkoutData.url || checkoutData.checkoutUrl,
-        sessionId: checkoutData.id || checkoutData.sessionId
+        checkoutUrl: checkoutUrl,
+        sessionId: sessionId
       });
       
     } catch (error) {
