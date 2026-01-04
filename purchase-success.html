@@ -369,10 +369,20 @@
 
   <script>
     (function() {
-      // Get sessionId from URL query parameters
+      // Get sessionId from URL query parameters lub localStorage
       // Sellhub może przekierować z różnymi parametrami: sessionId, id, session_id
       const params = new URLSearchParams(window.location.search);
-      const sessionId = params.get('sessionId') || params.get('id') || params.get('session_id') || params.get('session');
+      let sessionId = params.get('sessionId') || params.get('id') || params.get('session_id') || params.get('session');
+      
+      // Jeśli nie ma w URL, spróbuj z localStorage (zapisanego przed przekierowaniem)
+      if (!sessionId) {
+        sessionId = localStorage.getItem('sellhub_sessionId');
+        if (sessionId) {
+          console.log('Session ID found in localStorage:', sessionId);
+          // Usuń z localStorage po użyciu
+          localStorage.removeItem('sellhub_sessionId');
+        }
+      }
       
       const loadingDiv = document.getElementById('loading');
       const errorDiv = document.getElementById('error');
