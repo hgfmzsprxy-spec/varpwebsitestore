@@ -539,6 +539,29 @@ body, html {
 	  letter-spacing: 2px;
 	  flex-shrink: 0;
 	}
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	.show-more-catalog::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		background: url('images/bg-catalog-wrapper.jpg');
+		background-repeat: no-repeat;
+		background-position: center;
+		z-index: -1;
+		opacity: .2;
+	}
 	</style>
 </head>
 <body class="ipsApp ipsApp_front ipsJS_none ipsClearfix" data-controller="core.front.core.app" data-message="" data-pageapp="cms" data-pagelocation="front" data-pagemodule="pages" data-pagecontroller="page" data-pagename="home">
@@ -645,21 +668,6 @@ body, html {
   
   
     
-    
-                
-
-
-
-
-
-  <i class="fa-duotone fa-pager"></i>
-
-
-                Forums
-      </a>
-    
-    
-  </li>
 
 
 
@@ -1145,17 +1153,17 @@ body, html {
 </div>
 </div>
 
-<div class="show-more-catalog" style="margin-top: 6em;">
-<div class="ipsLayout_container">
-  <p style="font-variant: small-caps;font-weight: 600;font-size: 24px;letter-spacing: .02em;" class="gradient-text">WANT MORE GAMES?</p>
-  <span style="font-weight: 900;font-size: 64px;line-height: 78px;color:#fff !important;" class="description">Go To Directory</span>
-  <a href="/#store" class="button">
-    <span class="button_lg">
-      <span class="button_sl"></span>
-      <span class="button_text">Go To Directory</span>
-    </span>
-  </a>
-</div>
+<div class="show-more-catalog" style="height: 400px; position: relative; margin-top: 6em; margin-bottom: 6em;">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; position: relative; z-index: 33;">
+    <p style="font-variant: small-caps;font-weight: 600;font-size: 24px;letter-spacing: .02em; margin: 0; margin-bottom: 15px;" class="gradient-text">READY TO DOMINATE?</p>
+    <span style="font-weight: 900;font-size: 64px;line-height: 78px;color:#fff !important; margin: 0; margin-bottom: 25px; text-align: center;" class="description">PURCHASE NOW</span>
+    <a href="/#store" class="button" style="margin-top: 0;">
+      <span class="button_lg">
+        <span class="button_sl"></span>
+        <span class="button_text">Go To Directory</span>
+      </span>
+    </a>
+  </div>
 </div>
 
         </main>
