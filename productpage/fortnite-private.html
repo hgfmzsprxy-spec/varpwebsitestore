@@ -159,6 +159,114 @@
   visibility: visible !important;
   display: block !important;
 }
+/* Sellhub Checkout Modal Styles */
+.sellhub-checkout-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+.sellhub-checkout-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sellhub-checkout-content {
+  background: rgb(var(--theme-area_background));
+  border-radius: 12px;
+  padding: 2em;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+.sellhub-checkout-close {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: rgb(var(--theme-text_color));
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.sellhub-checkout-close:hover {
+  opacity: 1;
+}
+.sellhub-checkout-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+  color: rgb(var(--theme-text_color));
+}
+.sellhub-checkout-subtitle {
+  font-size: 14px;
+  color: rgba(var(--theme-text_color), 0.7);
+  margin-bottom: 1.5em;
+}
+.sellhub-checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.sellhub-checkout-input {
+  width: 100%;
+  padding: 0.875em;
+  border: 1px solid rgba(var(--theme-text_color), 0.2);
+  border-radius: 6px;
+  background: rgb(var(--theme-area_background_dark));
+  color: rgb(var(--theme-text_color));
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+.sellhub-checkout-input:focus {
+  outline: none;
+  border-color: rgb(var(--theme-brand_primary));
+}
+.sellhub-checkout-button {
+  width: 100%;
+  padding: 0.875em;
+  background: rgb(var(--theme-brand_primary));
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-top: 0.5em;
+}
+.sellhub-checkout-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.sellhub-checkout-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.sellhub-checkout-error {
+  color: #ff4444;
+  font-size: 14px;
+  margin-top: 0.5em;
+  display: none;
+}
+.sellhub-checkout-error.active {
+  display: block;
+}
+.sellhub-checkout-loading {
+  display: none;
+  text-align: center;
+  padding: 1em;
+}
+.sellhub-checkout-loading.active {
+  display: block;
+}
 	</style>
 	</head>
 	<body class="ipsApp ipsApp_front ipsJS_none ipsClearfix" data-controller="core.front.core.app" data-message="" data-pageapp="nexus" data-pagelocation="front" data-pagemodule="store" data-pagecontroller="product" data-pageid="9">
@@ -747,7 +855,7 @@
         <ul class="elCluster_buttons">
             
             <li>
-                <button class="elCluster_button active" data-product-id="35" data-url="https://shxdowcheats.net/store/product/35-ruby-rust-cheat-1-day/" data-price="$7.99 ">
+                <button class="elCluster_button active" data-product-id="35" data-url="https://shxdowcheats.net/store/product/35-ruby-rust-cheat-1-day/" data-price="$7.99 " data-sellhub-variant-id="1b4fe06e-2f0d-4cc9-9a5b-dc248677ffaa">
                     <div class="elClusterButton_header">
                       <i class="fa-solid fa-key"></i>
                       <div class="elClusterButton_type">1 Day</div>
@@ -763,14 +871,14 @@
             
               
               <li>
-                  <button class="elCluster_button" data-product-id="36" data-url="https://shxdowcheats.net/store/product/36-ruby-rust-cheat-7-days/" data-price="$29.99 ">
+                  <button class="elCluster_button" data-product-id="36" data-url="https://shxdowcheats.net/store/product/36-ruby-rust-cheat-7-days/" data-price="$19.99 " data-sellhub-variant-id="187916fd-b3a3-4cf2-a12d-db71e7841d2f">
                       <div class="elClusterButton_header">
                           <i class="fa-solid fa-key"></i>
                           <div class="elClusterButton_type">7 Day</div>
                       </div>
                       <div class="elClusterButton_price">
                           <div class="elClusterButton_number">
-                              $29.99
+                              $19.99
                               
                           </div>
                       </div>
@@ -780,14 +888,31 @@
             
               
               <li>
-                  <button class="elCluster_button" data-product-id="37" data-url="https://shxdowcheats.net/store/product/37-ruby-rust-cheat-30-days/" data-price="$59.99 ">
+                  <button class="elCluster_button" data-product-id="37" data-url="https://shxdowcheats.net/store/product/37-ruby-rust-cheat-30-days/" data-price="$39.99 " data-sellhub-variant-id="30ec2814-9130-477f-b1d9-1c284ed9ddbc">
                       <div class="elClusterButton_header">
                           <i class="fa-solid fa-key"></i>
                           <div class="elClusterButton_type">30 Day</div>
                       </div>
                       <div class="elClusterButton_price">
                           <div class="elClusterButton_number">
-                              $59.99
+                              $39.99
+                              
+                          </div>
+                      </div>
+                  </button>
+              </li>
+              
+            
+              
+              <li>
+                  <button class="elCluster_button" data-product-id="38" data-url="https://shxdowcheats.net/store/product/38-ruby-rust-cheat-lifetime/" data-price="$99.99 " data-sellhub-variant-id="766c2717-4bcc-4578-b79f-c1a51549c6b8">
+                      <div class="elClusterButton_header">
+                          <i class="fa-solid fa-key"></i>
+                          <div class="elClusterButton_type">Lifetime</div>
+                      </div>
+                      <div class="elClusterButton_price">
+                          <div class="elClusterButton_number">
+                              $99.99
                               
                           </div>
                       </div>
@@ -808,7 +933,7 @@
             <li class="ipsFieldRow">
                 <div class="ipsFieldRow_content">
                     
-                    <button id="add_to_cart" type="submit" class="ipsButton ipsButton_primary" tabindex="2" accesskey="s" role="button">Purchase Now</button>
+                    <button id="add_to_cart" type="button" class="ipsButton ipsButton_primary" tabindex="2" accesskey="s" role="button">Purchase Now</button>
                     
                 </div>
             </li>
@@ -1806,5 +1931,173 @@
 		
         
 	
+
+<!-- Sellhub Checkout Modal -->
+<div id="sellhubCheckoutModal" class="sellhub-checkout-modal">
+  <div class="sellhub-checkout-content">
+    <button class="sellhub-checkout-close" id="sellhubCheckoutClose">&times;</button>
+    <h3 class="sellhub-checkout-title">Complete Your Purchase</h3>
+    <p class="sellhub-checkout-subtitle">Enter your email address to continue to checkout</p>
+    <form class="sellhub-checkout-form" id="sellhubCheckoutForm">
+      <input 
+        type="email" 
+        id="sellhubCheckoutEmail" 
+        class="sellhub-checkout-input" 
+        placeholder="your.email@example.com" 
+        required
+        autocomplete="email"
+      >
+      <div class="sellhub-checkout-error" id="sellhubCheckoutError"></div>
+      <div class="sellhub-checkout-loading" id="sellhubCheckoutLoading">
+        <p>Creating checkout session...</p>
+      </div>
+      <button type="submit" class="sellhub-checkout-button" id="sellhubCheckoutSubmit">
+        Continue to Checkout
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Sellhub Checkout Integration
+  (function() {
+    let selectedVariantId = null;
+    let selectedQuantity = 1;
+
+    // Get selected variant when variant button is clicked
+    document.querySelectorAll('.elCluster_button').forEach(function(button) {
+      button.addEventListener('click', function() {
+        selectedVariantId = this.getAttribute('data-sellhub-variant-id');
+        // Update active state
+        document.querySelectorAll('.elCluster_button').forEach(function(btn) {
+          btn.classList.remove('active');
+        });
+        this.classList.add('active');
+      });
+    });
+
+    // Set initial variant (1 Day is active by default)
+    const initialButton = document.querySelector('.elCluster_button.active');
+    if (initialButton) {
+      selectedVariantId = initialButton.getAttribute('data-sellhub-variant-id');
+    }
+
+    // Get quantity
+    const quantityInput = document.getElementById('quantity_input_hidden');
+    if (quantityInput) {
+      selectedQuantity = parseInt(quantityInput.value) || 1;
+    }
+
+    // Modal elements
+    const modal = document.getElementById('sellhubCheckoutModal');
+    const closeBtn = document.getElementById('sellhubCheckoutClose');
+    const form = document.getElementById('sellhubCheckoutForm');
+    const emailInput = document.getElementById('sellhubCheckoutEmail');
+    const submitBtn = document.getElementById('sellhubCheckoutSubmit');
+    const errorDiv = document.getElementById('sellhubCheckoutError');
+    const loadingDiv = document.getElementById('sellhubCheckoutLoading');
+
+    // Open modal when Purchase Now is clicked
+    document.getElementById('add_to_cart').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      if (!selectedVariantId) {
+        alert('Please select a product variant first');
+        return;
+      }
+
+      // Update quantity if changed
+      if (quantityInput) {
+        selectedQuantity = parseInt(quantityInput.value) || 1;
+      }
+
+      // Reset form
+      emailInput.value = '';
+      errorDiv.classList.remove('active');
+      errorDiv.textContent = '';
+      loadingDiv.classList.remove('active');
+      submitBtn.disabled = false;
+
+      // Show modal
+      modal.classList.add('active');
+      emailInput.focus();
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', function() {
+      modal.classList.remove('active');
+    });
+
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+      }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = emailInput.value.trim();
+
+      // Validate email
+      if (!email) {
+        showError('Please enter your email address');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError('Please enter a valid email address');
+        return;
+      }
+
+      // Disable form and show loading
+      submitBtn.disabled = true;
+      loadingDiv.classList.add('active');
+      errorDiv.classList.remove('active');
+
+      try {
+        // Call backend API
+        const response = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            variantId: selectedVariantId,
+            quantity: selectedQuantity
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create checkout session');
+        }
+
+        if (data.success && data.checkoutUrl) {
+          // Redirect to Sellhub checkout
+          window.location.href = data.checkoutUrl;
+        } else {
+          throw new Error('Invalid response from server');
+        }
+
+      } catch (error) {
+        console.error('Checkout error:', error);
+        showError(error.message || 'An error occurred. Please try again.');
+        submitBtn.disabled = false;
+        loadingDiv.classList.remove('active');
+      }
+    });
+
+    function showError(message) {
+      errorDiv.textContent = message;
+      errorDiv.classList.add('active');
+    }
+  })();
+</script>
 
 </body></html>
