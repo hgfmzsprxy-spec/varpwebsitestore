@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Varp Website with Sellhub Integration",
   "engines": {
-    "node": "24.x"
+    "node": "24"
   }
 }
 
