@@ -396,19 +396,52 @@
       
       // Fetch session data from backend
       fetch(`/api/get-session?sessionId=${sessionId}`)
-        .then(response => {
+        .then(async response => {
+          const contentType = response.headers.get('content-type');
+          
+          // Jeśli odpowiedź nie jest OK, spróbuj parsować JSON
           if (!response.ok) {
-            return response.json().then(data => {
-              throw new Error(data.message || data.error || 'Failed to load order details');
-            });
+            let errorMessage = 'Failed to load order details';
+            
+            if (contentType && contentType.includes('application/json')) {
+              try {
+                const errorData = await response.json();
+                errorMessage = errorData.message || errorData.error || errorMessage;
+                
+                // Jeśli backend zwrócił szczegóły o próbowanych endpointach, dodaj je do komunikatu
+                if (errorData.triedEndpoints) {
+                  console.error('Tried endpoints:', errorData.triedEndpoints);
+                  console.error('Last error:', errorData.lastError);
+                }
+              } catch (e) {
+                // Jeśli nie można sparsować JSON, użyj tekstu
+                const text = await response.text();
+                errorMessage = text.substring(0, 200) || errorMessage;
+              }
+            } else {
+              // Jeśli to HTML (404 page), użyj ogólnego komunikatu
+              errorMessage = `Server returned ${response.status}. Please check if the API endpoint is correctly configured.`;
+            }
+            
+            throw new Error(errorMessage);
           }
-          return response.json();
+          
+          // Jeśli odpowiedź jest OK, parsuj JSON
+          if (contentType && contentType.includes('application/json')) {
+            return response.json();
+          } else {
+            throw new Error('Invalid response format: expected JSON');
+          }
         })
         .then(data => {
+          // Backend zwraca: { success: true, session: {...}, status: "..." }
           if (data.success && data.session) {
             displayInvoice(data.session);
+          } else if (data.session) {
+            // Fallback: jeśli session jest bezpośrednio w odpowiedzi
+            displayInvoice(data.session);
           } else {
-            throw new Error('Invalid response format');
+            throw new Error('Invalid response format: session data not found');
           }
         })
         .catch(error => {
