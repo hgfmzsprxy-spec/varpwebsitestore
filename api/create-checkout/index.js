@@ -41,6 +41,8 @@ module.exports = async (req, res) => {
     const SELLHUB_STORE_ID = process.env.SELLHUB_STORE_ID;
     const SELLHUB_PRODUCT_ID = process.env.SELLHUB_PRODUCT_ID || 'ac3ab96d-c3d5-4ebd-b9a2-d380def5adbb';
     const SELLHUB_STORE_URL = process.env.SELLHUB_STORE_URL || 'https://visiondevelopment.sellhub.cx';
+    // Usuń końcowy slash z Store URL jeśli istnieje
+    const cleanStoreUrl = SELLHUB_STORE_URL.replace(/\/$/, '');
     const RETURN_URL = process.env.RETURN_URL || `${req.headers.origin || 'https://shxdowcheats.net'}/purchase-success`;
 
     if (!SELLHUB_API_KEY || !SELLHUB_STORE_ID || !SELLHUB_PRODUCT_ID) {
@@ -70,22 +72,48 @@ module.exports = async (req, res) => {
     };
 
     // Create checkout session with Sellhub API
-    const sellhubResponse = await fetch(`${SELLHUB_STORE_URL}/api/session/create-checkout-session`, {
+    // Endpoint powinien być na Store URL zgodnie z dokumentacją
+    const apiEndpoint = `${cleanStoreUrl}/api/session/create-checkout-session`;
+    
+    console.log('Sellhub API Endpoint:', apiEndpoint);
+    console.log('Store ID:', SELLHUB_STORE_ID);
+    console.log('Payload:', JSON.stringify(checkoutPayload, null, 2));
+    
+    const sellhubResponse = await fetch(apiEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${SELLHUB_API_KEY}`,
-        'X-Store-ID': SELLHUB_STORE_ID
+        'X-Store-ID': SELLHUB_STORE_ID,
+        'Accept': 'application/json'
       },
       body: JSON.stringify(checkoutPayload)
     });
 
     if (!sellhubResponse.ok) {
       const errorData = await sellhubResponse.text();
-      console.error('Sellhub API error:', errorData);
-      return res.status(sellhubResponse.status).json({ 
+      const errorStatus = sellhubResponse.status;
+      console.error('Sellhub API error:', {
+        status: errorStatus,
+        statusText: sellhubResponse.statusText,
+        endpoint: apiEndpoint,
+        responsePreview: errorData.substring(0, 500)
+      });
+      
+      // Jeśli to 404, może endpoint jest nieprawidłowy
+      if (errorStatus === 404) {
+        return res.status(500).json({ 
+          error: 'Sellhub API endpoint not found',
+          message: 'The checkout endpoint does not exist. Please verify the Store URL and API endpoint in Sellhub documentation.',
+          endpoint: apiEndpoint,
+          storeUrl: SELLHUB_STORE_URL
+        });
+      }
+      
+      return res.status(errorStatus).json({ 
         error: 'Failed to create checkout session',
-        details: errorData
+        status: errorStatus,
+        details: errorData.substring(0, 500)
       });
     }
 
