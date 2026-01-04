@@ -1,18 +1,18 @@
 module.exports = async (req, res) => {
-  // Log request for debugging
+
   console.log('Checkout API called:', req.method, req.url);
   
-  // CORS headers (ustaw przed sprawdzaniem metody)
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle preflight OPTIONS request FIRST (przed sprawdzaniem POST)
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Only allow POST requests
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
   try {
     const { email, variantId, variantPrice, variantName, quantity = 1, productId } = req.body;
 
-    // Validate required fields
+
     if (!email || !variantId || !variantPrice) {
       return res.status(400).json({ 
         error: 'Missing required fields',
@@ -28,7 +28,6 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ 
@@ -36,13 +35,12 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Sellhub API configuration
     const SELLHUB_API_KEY = process.env.SELLHUB_API_KEY;
     const SELLHUB_STORE_ID = process.env.SELLHUB_STORE_ID;
-    // Use productId from request if provided, otherwise fall back to env variable
+
     const SELLHUB_PRODUCT_ID = productId || process.env.SELLHUB_PRODUCT_ID || 'ac3ab96d-c3d5-4ebd-b9a2-d380def5adbb';
     const SELLHUB_STORE_URL = process.env.SELLHUB_STORE_URL || 'https://visiondevelopment.sellhub.cx';
-    // Usuń końcowy slash z Store URL jeśli istnieje
+  
     const cleanStoreUrl = SELLHUB_STORE_URL.replace(/\/$/, '');
     const RETURN_URL = process.env.RETURN_URL || `${req.headers.origin || 'https://shxdowcheats.net'}/purchase-success`;
 
@@ -53,10 +51,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Prepare checkout session payload
-    // WYMAGANE: variant musi mieć id, name i price (string!)
-    // WYMAGANE: methodName i customFieldValues (nawet jeśli puste)
-    // UWAGA: Sprawdź czy Product ID i Variant ID są poprawne i należą do Twojego Store!
+
     const checkoutPayload = {
       email: email,
       currency: 'USD',
@@ -80,7 +75,7 @@ module.exports = async (req, res) => {
       }
     };
     
-    // Loguj Product ID i Variant ID dla debugowania
+
     console.log('=== ID Verification ===');
     console.log('Product ID:', SELLHUB_PRODUCT_ID);
     console.log('Variant ID:', variantId);
@@ -90,9 +85,7 @@ module.exports = async (req, res) => {
     console.log('   2. Variant ID jest poprawny i należy do Product ID:', SELLHUB_PRODUCT_ID);
     console.log('   3. Oba ID są aktywne w panelu Sellhub');
 
-    // Create checkout session with Sellhub API
-    // Endpoint: użyj endpointu specyficznego dla Twojego Store (subdomena)
-    // Każdy Store ma swoje produkty zarejestrowane na swojej subdomenie
+
     const apiEndpoint = `${cleanStoreUrl}/api/checkout`;
     
     console.log('=== Sellhub API Request ===');
@@ -109,7 +102,7 @@ module.exports = async (req, res) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': SELLHUB_API_KEY, // Bez "Bearer"
+          'Authorization': SELLHUB_API_KEY, 
           'Accept': 'application/json'
         },
         body: JSON.stringify(checkoutPayload)
@@ -117,12 +110,12 @@ module.exports = async (req, res) => {
       
       console.log(`Response Status: ${sellhubResponse.status} ${sellhubResponse.statusText}`);
       
-      // Odczytaj odpowiedź (nawet jeśli błąd) dla debugowania
+
       const responseText = await sellhubResponse.text();
       console.log('=== SELLHUB RAW RESPONSE ===');
       console.log(responseText);
       
-      // Jeśli odpowiedź nie jest OK, zwróć błąd
+
       if (!sellhubResponse.ok) {
         let errorMessage;
         try {
@@ -143,7 +136,7 @@ module.exports = async (req, res) => {
         });
       }
       
-      // Parsuj odpowiedź JSON
+
       const checkoutData = JSON.parse(responseText);
       
       console.log('=== Sellhub API Success ===');
@@ -162,12 +155,12 @@ module.exports = async (req, res) => {
         });
       }
       
-      // Zbuduj checkout URL na podstawie Store URL i session ID
+
       const checkoutUrl = `${cleanStoreUrl}/checkout/${sessionId}/`;
       
       console.log('Generated checkout URL:', checkoutUrl);
 
-      // Return checkout URL to frontend
+
       return res.status(200).json({
         success: true,
         checkoutUrl: checkoutUrl,

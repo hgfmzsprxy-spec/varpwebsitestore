@@ -1,18 +1,17 @@
 module.exports = async (req, res) => {
-  // Log request for debugging
+
   console.log('Checkout API called:', req.method, req.url);
   
-  // CORS headers (ustaw przed sprawdzaniem metody)
+ // cors
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle preflight OPTIONS request FIRST (przed sprawdzaniem POST)
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -20,7 +19,7 @@ module.exports = async (req, res) => {
   try {
     const { email, variantId, variantPrice, variantName, quantity = 1, productId } = req.body;
 
-    // Validate required fields
+
     if (!email || !variantId || !variantPrice) {
       return res.status(400).json({ 
         error: 'Missing required fields',
@@ -28,7 +27,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Validate email format
+ 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ 
@@ -36,7 +35,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Sellhub API configuration
+
     const SELLHUB_API_KEY = process.env.SELLHUB_API_KEY;
     const SELLHUB_STORE_ID = process.env.SELLHUB_STORE_ID;
     // Use productId from request if provided, otherwise fall back to env variable
@@ -167,7 +166,7 @@ module.exports = async (req, res) => {
       
       console.log('Generated checkout URL:', checkoutUrl);
 
-      // Return checkout URL to frontend
+      // frontend
       return res.status(200).json({
         success: true,
         checkoutUrl: checkoutUrl,
