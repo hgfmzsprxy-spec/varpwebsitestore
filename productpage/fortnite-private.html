@@ -2099,6 +2099,19 @@
             localStorage.setItem('sellhub_sessionId', data.sessionId);
             console.log('Session ID saved to localStorage:', data.sessionId);
           }
+
+          // Zapisz metadane do wyszukania faktury po czasie (Sellhub: GET /invoices?createdAtFrom&createdAtTo)
+          // Backend zwraca createdAt (ISO) oraz email.
+          const createdAtMs = data.createdAt ? Date.parse(data.createdAt) : Date.now();
+          localStorage.setItem('sellhub_createdAtMs', String(Number.isFinite(createdAtMs) ? createdAtMs : Date.now()));
+          if (data.email) {
+            localStorage.setItem('sellhub_email', data.email);
+          } else {
+            localStorage.setItem('sellhub_email', email);
+          }
+          if (data.visitorAnalyticsId) {
+            localStorage.setItem('sellhub_visitorAnalyticsId', data.visitorAnalyticsId);
+          }
           
           // Redirect to Sellhub checkout
           window.location.href = data.checkoutUrl;

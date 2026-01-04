@@ -170,7 +170,11 @@ module.exports = async (req, res) => {
       return res.status(200).json({
         success: true,
         checkoutUrl: checkoutUrl,
-        sessionId: sessionId
+               sessionId: sessionId,
+               // Useful for mapping to invoices later (Sellhub invoices API uses createdAtFrom/To)
+               createdAt: checkoutData.session?.createdAt || new Date().toISOString(),
+               email: checkoutData.session?.email || email,
+               visitorAnalyticsId: checkoutData.session?.visitorAnalyticsId || null
       });
       
     } catch (error) {

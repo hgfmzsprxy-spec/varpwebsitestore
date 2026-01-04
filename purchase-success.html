@@ -390,6 +390,11 @@
         }
       }
 
+      // Dane pomocnicze do znalezienia faktury (invoice) po czasie
+      // Ustawiane przy tworzeniu checkouta w fortnite-private.html
+      const createdAtMs = localStorage.getItem('sellhub_createdAtMs');
+      const storedEmail = localStorage.getItem('sellhub_email');
+
       // Normalizuj URL do /purchase-success#<id> (bez query stringa)
       // - jeśli przyszło w query albo localStorage: przenosimy do hash
       // - jeśli już jest w hash: zostawiamy
@@ -419,8 +424,13 @@
         return;
       }
       
-      // Fetch session data from backend
-      fetch(`/api/get-session?sessionId=${sessionId}`)
+      // Fetch invoice data from backend (Sellhub: GET /invoices + GET /invoices/{id})
+      if (!createdAtMs) {
+        showError('Missing invoice lookup data. Please return to product page and try again.');
+        return;
+      }
+
+      fetch(`/api/get-invoice?createdAtMs=${encodeURIComponent(createdAtMs)}&email=${encodeURIComponent(storedEmail || '')}`)
         .then(async response => {
           const contentType = response.headers.get('content-type');
           
@@ -459,14 +469,11 @@
           }
         })
         .then(data => {
-          // Backend zwraca: { success: true, session: {...}, status: "..." }
-          if (data.success && data.session) {
-            displayInvoice(data.session);
-          } else if (data.session) {
-            // Fallback: jeśli session jest bezpośrednio w odpowiedzi
-            displayInvoice(data.session);
+          // Backend zwraca: { success: true, invoice: {...} }
+          if (data.success && data.invoice) {
+            displayInvoice(data.invoice);
           } else {
-            throw new Error('Invalid response format: session data not found');
+            throw new Error('Invalid response format: invoice data not found');
           }
         })
         .catch(error => {
@@ -486,7 +493,7 @@
         
         // Display order info
         document.getElementById('orderId').textContent = session.id || 'N/A';
-        document.getElementById('orderEmail').textContent = session.email || 'N/A';
+        document.getElementById('orderEmail').textContent = session.email || session.customerEmail || storedEmail || 'N/A';
         
         // Format date
         if (session.createdAt) {
@@ -522,8 +529,10 @@
         const productsList = document.getElementById('productsList');
         productsList.innerHTML = '';
         
-        if (session.cartItems && session.cartItems.length > 0) {
-          session.cartItems.forEach(item => {
+        const items = session.cartItems || session.items || session.invoiceItems || [];
+
+        if (items && items.length > 0) {
+          items.forEach(item => {
             const productDiv = document.createElement('div');
             productDiv.className = 'product-item';
             
