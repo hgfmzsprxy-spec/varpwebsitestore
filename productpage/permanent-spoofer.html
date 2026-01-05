@@ -1193,11 +1193,20 @@
                   <nav class="theme-footerLinks_nav">
                   <ul class="theme-footer_list dataList">
                     <li class="list-title">Our Products</li>
-                    <li><a href="/section/fortnite">Fortnite Private</a></li>
-                    <li><a href="/section/bo7">Black Ops 7</a></li>
+                    <li><a href="/section/fortnite">Fortnite</a></li>
                     <li><a href="/section/rust">Rust</a></li>
+                    <li><a href="/section/bo7">Black Ops7</a></li>
+                    <li><a href="/section/battlefield-6">Battlefield 6</a></li>
                     <li><a href="/section/spoofer">HWID Spoofer</a></li>
-                    <li><a href="/section/fivem">FiveM</a></li>
+                  </ul>
+                </nav>
+                <nav class="theme-footerLinks_nav">
+                  <ul class="theme-footer_list dataList">
+                    <li class="list-title">Our Products</li>
+                    <li><a href="/section/fivem">Fivem</a></li>
+                    <li><a href="/section/arc-riders">Arc Raiders</a></li>
+                    <li><a href="/section/r6s">Rainbow Six Siege</a></li>
+                    <li><a href="/section/eft">Escape From Tarkov</a></li>
                   </ul>
                 </nav>
                 <nav class="theme-footerLinks_nav">
@@ -1827,14 +1836,14 @@
     <h3 class="sellhub-checkout-title">Complete Your Purchase</h3>
     <p class="sellhub-checkout-subtitle">Enter your email address to continue to checkout</p>
     <form class="sellhub-checkout-form" id="sellhubCheckoutForm">
-      <input 
-        type="email" 
-        id="sellhubCheckoutEmail" 
+        <input 
+          type="email" 
+          id="sellhubCheckoutEmail" 
         class="sellhub-checkout-input" 
         placeholder="your.email@example.com" 
-        required
-        autocomplete="email"
-      >
+          required
+          autocomplete="email"
+        >
       <div class="sellhub-checkout-error" id="sellhubCheckoutError"></div>
       <div class="sellhub-checkout-loading" id="sellhubCheckoutLoading">
         <p>Creating checkout session...</p>
@@ -1929,7 +1938,7 @@
     submitBtn.addEventListener('mousedown', function(e) {
       e.preventDefault();
       if (submitBtn.disabled) return;
-      
+
       const email = emailInput.value.trim();
       if (!email) {
         showError('Please enter your email address');
@@ -1947,11 +1956,11 @@
       
       // Wait for animation to complete, then submit
       setTimeout(async () => {
-        loadingDiv.classList.add('active');
-        errorDiv.classList.remove('active');
+      loadingDiv.classList.add('active');
+      errorDiv.classList.remove('active');
 
-        try {
-          const response = await fetch('/api/create-checkout', {
+      try {
+        const response = await fetch('/api/create-checkout', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1991,13 +2000,13 @@
           throw new Error('Invalid response from server');
         }
 
-        } catch (error) {
-          console.error('Checkout error:', error);
-          showError(error.message || 'An error occurred. Please try again.');
-          submitBtn.disabled = false;
+      } catch (error) {
+        console.error('Checkout error:', error);
+        showError(error.message || 'An error occurred. Please try again.');
+        submitBtn.disabled = false;
           submitBtn.classList.remove('pressing');
-          loadingDiv.classList.remove('active');
-        }
+        loadingDiv.classList.remove('active');
+      }
       }, 1000);
     });
 
